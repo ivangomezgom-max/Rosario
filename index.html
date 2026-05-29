@@ -135,95 +135,88 @@
 </nav>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // 1. Imagen de Fondo Aleatoria
         const backgroundImages = [
-            'https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&w=2071&auto=format&fit=crop', // Cathedral
-            'https://images.unsplash.com/photo-1515516089376-88db1e26e9c0?q=80&w=2070&auto=format&fit=crop', // Stained glass
-            'https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?q=80&w=2070&auto=format&fit=crop', // Candles
-            'https://images.unsplash.com/photo-1621274403997-37aae1848b40?q=80&w=2071&auto=format&fit=crop'  // Art
+            'https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&w=2071&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1515516089376-88db1e26e9c0?q=80&w=2070&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?q=80&w=2070&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1621274403997-37aae1848b40?q=80&w=2071&auto=format&fit=crop'
         ];
-
         const bgElement = document.getElementById('dynamic-bg');
-        
-        const setRandomBg = () => {
+        if (bgElement) {
             const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
-            if (bgElement) {
-                bgElement.style.backgroundImage = `url('${randomImage}')`;
+            bgElement.style.backgroundImage = `url('${randomImage}')`;
+        }
+
+        // 2. Lógica de Fecha, Reloj y Misterio Automático
+        const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const ahora = new Date();
+        const hoy = diasSemana[ahora.getDay()];
+
+        // Calcular Misterio
+        let misterioHoy = 'Gozosos';
+        if (hoy === 'Martes' || hoy === 'Viernes') misterioHoy = 'Dolorosos';
+        else if (hoy === 'Miércoles' || hoy === 'Domingo') misterioHoy = 'Gloriosos';
+        else if (hoy === 'Jueves') misterioHoy = 'Luminosos';
+
+        // Guardar selección para las siguientes pantallas
+        localStorage.setItem('misterioSeleccionado', misterioHoy);
+
+        // Actualizar la fecha visualmente
+        const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
+        let fechaFormateada = ahora.toLocaleDateString('es-ES', opcionesFecha);
+        fechaFormateada = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
+        
+        const pFecha = document.querySelector('p.font-display');
+        if (pFecha) pFecha.textContent = fechaFormateada;
+
+        // Actualizar el texto del botón dinámicamente
+        const spanMisterio = document.querySelector('button span.text-secondary');
+        if (spanMisterio) {
+            spanMisterio.textContent = `(Misterios ${misterioHoy} — ${hoy})`;
+        }
+
+        // Reloj en tiempo real
+        const h2Reloj = document.querySelector('h2.font-display');
+        const actualizarReloj = () => {
+            const timeNow = new Date();
+            let horas = timeNow.getHours();
+            const minutos = String(timeNow.getMinutes()).padStart(2, '0');
+            const ampm = horas >= 12 ? 'PM' : 'AM';
+            horas = horas % 12;
+            horas = horas ? horas : 12;
+            if (h2Reloj) {
+                h2Reloj.innerHTML = `${horas}:${minutos} <span class="text-3xl md:text-4xl font-display align-middle opacity-80">${ampm}</span>`;
             }
         };
+        actualizarReloj();
+        setInterval(actualizarReloj, 60000);
 
-        setRandomBg();
+        // 3. Activación de los Botones de Navegación
+        // Botón Principal de Comenzar Oración
+        const botonComenzar = document.querySelector('button[aria-label*="Rezar los misterios"]');
+        if (botonComenzar) {
+            botonComenzar.removeAttribute('onclick'); // Quitamos el '#' que puso Stitch
+            botonComenzar.addEventListener('click', () => {
+                window.location.href = 'oracion.html';
+            });
+        }
+
+        // Botón de Ajustes (Esquina superior derecha)
+        const botonAjustes = document.querySelector('button[aria-label="Abrir ajustes"]');
+        if (botonAjustes) {
+            botonAjustes.addEventListener('click', () => {
+                window.location.href = 'misterios.html';
+            });
+        }
+        
+        // Botón Siguiente de la barra inferior (Acción rápida)
+        const botonSiguiente = document.querySelector('button[aria-label="Siguiente paso de la oración"]');
+        if (botonSiguiente) {
+            botonSiguiente.addEventListener('click', () => {
+                window.location.href = 'oracion.html';
+            });
+        }
     });
-      <script>
-  // 1. Lógica para el Reloj y la Fecha en tiempo real
-  function actualizarReloj() {
-    const ahora = new Date();
-    
-    // Formatear la hora (ej: 10:30 AM)
-    let horas = ahora.getHours();
-    const minutos = String(now.getMinutes()).padStart(2, '0');
-    const ampm = horas >= 12 ? 'PM' : 'AM';
-    horas = horas % 12;
-    horas = horas ? horas : 12; // el número 0 debe ser 12
-    
-    // Formatear la fecha (ej: Lunes, 12 de Junio)
-    const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
-    const fechaFormateada = ahora.toLocaleDateString('es-ES', opcionesFecha);
-    // Capitalizar la primera letra
-    const fechaFinal = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
-
-    // Buscar los elementos que creó Stitch por su texto e inyectar los datos reales
-    // Nota: Si Stitch usó IDs o clases específicas, este script busca los bloques de texto.
-    document.body.innerHTML = document.body.innerHTML
-      .replace(/10:30\s*AM/g, `${horas}:${minutos} ${ampm}`)
-      .replace(/Lunes,\s*12\s*de\s*Junio/g, fechaFinal);
-  }
-
-  // 2. Lógica para calcular el Misterio del Día
-  function configurarMisterioDelDia() {
-    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    const hoy = diasSemana[new Date().getDay()];
-    
-    let misterioHoy = '';
-    if (hoy === 'Lunes' || hoy === 'Sábado') misterioHoy = 'Gozosos';
-    else if (hoy === 'Martes' || hoy === 'Viernes') misterioHoy = 'Dolorosos';
-    else if (hoy === 'Miércoles' || hoy === 'Domingo') misterioHoy = 'Gloriosos';
-    else if (hoy === 'Jueves') misterioHoy = 'Luminosos';
-
-    // Guardamos el misterio de hoy en la memoria del teléfono para usarlo en las siguientes pantallas
-    localStorage.setItem('misterioSeleccionado', misterioHoy);
-
-    // Reemplazar el texto del botón dinámicamente
-    document.body.innerHTML = document.body.innerHTML
-      .replace(/Misterios\s*Gozosos\s*—\s*Lunes/g, `Misterios ${misterioHoy} — ${hoy}`);
-  }
-
-  // 3. Hacer que los botones funcionen y salten de pantalla
-  function activarBotones() {
-    // Buscamos el contenedor o botón que dice "Rezar los Misterios de Hoy"
-    const elementos = document.getElementsByTagName('*');
-    for (let el of elementos) {
-      if (el.innerText && el.innerText.includes('Rezar los Misterios')) {
-        el.style.cursor = 'pointer';
-        el.onclick = function() {
-          window.location.href = 'oracion.html'; // Salta directo a la pantalla de oración
-        };
-      }
-      if (el.innerText && el.innerText.includes('AJUSTES')) {
-        el.style.cursor = 'pointer';
-        el.onclick = function() {
-          window.location.href = 'misterios.html'; // Salta al menú de selección manual
-        };
-      }
-    }
-  }
-
-  // Ejecutar todo cuando cargue la pantalla
-  window.onload = function() {
-    configurarMisterioDelDia();
-    actualizarReloj();
-    activarBotones();
-    setInterval(actualizarReloj, 60000); // Actualiza el reloj cada minuto
-  };
-</script>
 </script>
 </body></html>
