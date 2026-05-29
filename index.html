@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Open+Sans:wght@400;500;600;700&amp;family=Source+Serif+4:ital,wght@0,400;0,600;1,400&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#FBF9F8", // Cream/White background
+                    "primary": "#1E3A5F", // Deep Navy
+                    "secondary": "#C9A227", // Gold
+                    "on-primary": "#ffffff",
+                    "on-surface": "#1B1C1C",
+                    "surface-container": "#F5F3F3",
+                    "outline": "#747878"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.5rem",
+                    "lg": "1rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "display": ["Playfair Display", "serif"],
+                    "body": ["Open Sans", "sans-serif"],
+                    "prayer-quote": ["EB Garamond", "serif"]
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            min-height: 100dvh;
+            font-family: 'Open Sans', sans-serif;
+        }
+        #dynamic-bg {
+            transition: background-image 1.5s ease-in-out;
+        }
+        .text-shadow-sm {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        /* Accessibility Focus Ring */
+        button:focus-visible {
+            outline: 3px solid #C9A227;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex flex-col overflow-hidden relative">
+<!-- Background texture and images (Dynamic) -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-2] bg-cover bg-center bg-no-repeat" id="dynamic-bg"></div>
+<!-- Dark Translucent Overlay for High Contrast Legibility (Accessibility Requirement) -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-1] bg-primary/70 backdrop-brightness-75"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-primary/95 backdrop-blur-md shadow-lg border-b border-secondary/20 flex justify-between items-center px-6 py-4" role="banner">
+<div class="flex items-center gap-3">
+<span aria-hidden="true" class="material-symbols-outlined text-secondary text-2xl">menu_book</span>
+<h1 class="font-display text-lg font-bold text-secondary uppercase tracking-[0.15em]">EL SANTO ROSARIO</h1>
+</div>
+<button aria-label="Abrir ajustes" class="font-body text-xs uppercase tracking-widest text-on-primary font-bold px-3 py-1 hover:text-secondary transition-colors">
+        AJUSTES
+    </button>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col items-center justify-center p-6 mt-16 mb-24 relative overflow-y-auto">
+<!-- Decorative Background Element -->
+<div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center">
+<span aria-hidden="true" class="material-symbols-outlined text-[30rem] text-white">church</span>
+</div>
+<!-- Top Panel: Time and Date -->
+<section class="w-full max-w-xl text-center mb-12 z-10">
+<div class="flex flex-col items-center space-y-2">
+<div class="inline-block px-6 py-1.5 bg-secondary/20 backdrop-blur-md rounded-full border border-secondary/40 mb-4">
+<span class="font-body text-[10px] uppercase tracking-[0.25rem] text-secondary font-bold">Presencia Sagrada</span>
+</div>
+<h2 class="font-display text-7xl md:text-8xl font-medium text-white text-shadow-sm tracking-tight">
+                10:30 <span class="text-3xl md:text-4xl font-display align-middle opacity-80">AM</span>
+</h2>
+<div class="h-[2px] w-16 bg-secondary my-4"></div>
+<p class="font-display text-2xl md:text-3xl text-white italic">
+                Lunes, 12 de Junio
+            </p>
+</div>
+</section>
+<!-- Main Body: Action Button -->
+<section class="w-full max-w-md z-10">
+<div class="relative group">
+<!-- Glow effect for visual emphasis -->
+<div class="absolute -inset-2 bg-secondary/20 rounded-xl blur-xl group-hover:bg-secondary/30 transition-all duration-500"></div>
+<button aria-label="Rezar los misterios de hoy: Misterios Gozosos" class="relative w-full bg-white rounded-xl shadow-2xl flex flex-col items-center justify-center p-8 transition-transform active:scale-[0.98] duration-300 border-2 border-secondary overflow-hidden" onclick="window.location.href='#misterios'">
+<span class="font-body text-primary text-[10px] tracking-[0.3em] mb-4 uppercase font-extrabold">COMENZAR LA ORACIÓN</span>
+<span class="font-display text-2xl md:text-3xl text-primary text-center leading-tight">
+                    Rezar los Misterios de Hoy
+                    <span class="block mt-3 text-secondary font-display text-lg md:text-xl italic font-medium">
+                        (Misterios Gozosos — Lunes)
+                    </span>
+</span>
+<div class="mt-6 flex items-center gap-3 text-primary/30">
+<span class="h-px w-6 bg-current"></span>
+<span aria-hidden="true" class="material-symbols-outlined text-secondary">auto_stories</span>
+<span class="h-px w-6 bg-current"></span>
+</div>
+</button>
+</div>
+<blockquote class="mt-10 text-center">
+<p class="font-prayer-quote text-secondary font-medium italic text-xl md:text-2xl max-w-xs mx-auto leading-snug drop-shadow-sm">
+                "Donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos."
+            </p>
+</blockquote>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full h-24 z-50 bg-primary/95 backdrop-blur-md flex justify-around items-center px-6 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.5)] border-t border-white/10" role="navigation">
+<button aria-label="Ir al anterior misterio" class="flex flex-col items-center justify-center text-on-primary/70 px-6 py-2 hover:text-secondary transition-all rounded-lg group">
+<span aria-hidden="true" class="material-symbols-outlined mb-1 text-2xl group-hover:scale-110 transition-transform">arrow_back_ios</span>
+<span class="font-body text-[10px] font-bold tracking-widest uppercase">ANTERIOR</span>
+</button>
+<!-- Prominent Action Indicator -->
+<button aria-label="Siguiente paso de la oración" class="flex flex-col items-center justify-center bg-secondary border border-secondary shadow-lg rounded-xl px-10 py-3 text-primary hover:bg-white hover:border-white transition-all transform scale-105 active:scale-100">
+<span aria-hidden="true" class="material-symbols-outlined mb-1 text-2xl font-bold">arrow_forward_ios</span>
+<span class="font-body text-[10px] font-bold tracking-widest uppercase">SIGUIENTE</span>
+</button>
+</nav>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const backgroundImages = [
+            'https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&w=2071&auto=format&fit=crop', // Cathedral
+            'https://images.unsplash.com/photo-1515516089376-88db1e26e9c0?q=80&w=2070&auto=format&fit=crop', // Stained glass
+            'https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?q=80&w=2070&auto=format&fit=crop', // Candles
+            'https://images.unsplash.com/photo-1621274403997-37aae1848b40?q=80&w=2071&auto=format&fit=crop'  // Art
+        ];
+
+        const bgElement = document.getElementById('dynamic-bg');
+        
+        const setRandomBg = () => {
+            const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+            if (bgElement) {
+                bgElement.style.backgroundImage = `url('${randomImage}')`;
+            }
+        };
+
+        setRandomBg();
+    });
+</script>
+</body></html>

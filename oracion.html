@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Open+Sans:wght@300;400;500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#1E3A5F",
+                    "secondary": "#D4AF37", // Saturated gold for high contrast as per accessibility report
+                    "on-background": "#1A1A1A",
+                    "background": "#FFFFFF",
+                    "surface": "#FFFFFF",
+                    "surface-container": "#F6F3F2",
+                    "outline-variant": "#D1D5DB",
+                    "on-primary": "#D4AF37",
+                    "on-surface-variant": "#4B5563"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.75rem",
+                    "lg": "1rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Playfair Display", "serif"],
+                    "body": ["Open Sans", "sans-serif"],
+                    "sacred": ["Cormorant Garamond", "serif"],
+                    "label": ["Open Sans", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        /* High weight for better contrast/visibility for seniors */
+        font-variation-settings: 'FILL' 0, 'wght' 700, 'GRAD' 0, 'opsz' 24;
+      }
+      .bead-shadow {
+        box-shadow: 0 4px 12px rgba(30, 58, 95, 0.08);
+      }
+      .active-bead-glow {
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+      }
+      body {
+        min-height: 100dvh;
+      }
+      /* Ensure focus states are visible for accessibility */
+      button:focus-visible {
+        outline: 3px solid #D4AF37;
+        outline-offset: 2px;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-primary shadow-md flex justify-between items-center px-6 py-4" role="banner">
+<div class="flex items-center gap-3">
+<span aria-hidden="true" class="material-symbols-outlined text-secondary" style="font-variation-settings: 'wght' 700;">menu_book</span>
+<h1 class="font-headline text-xl font-bold uppercase tracking-[0.2em] text-secondary">EL SANTO ROSARIO</h1>
+</div>
+<button aria-label="Abrir ajustes de la aplicación" class="font-label text-xs font-bold text-secondary hover:opacity-80 transition-opacity tracking-widest bg-white/10 px-4 py-2 rounded-full border border-secondary/20">
+            AJUSTES
+        </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-28 pb-36 px-6 max-w-4xl mx-auto w-full">
+<!-- Mystery Header - Sequential Hierarchy H1 -> H2 -->
+<section class="mb-12 mt-4 text-center md:text-left">
+<p class="font-sacred text-secondary italic text-xl mb-1 font-bold">PRIMER MISTERIO GOZOSO</p>
+<h2 class="font-headline text-5xl text-primary font-bold leading-tight">La Anunciación</h2>
+</section>
+<!-- Visual Progress: Beads -->
+<section aria-label="Progreso del misterio actual" class="mb-16">
+<div class="flex justify-between items-center mb-6 px-2">
+<span class="font-label text-xs tracking-widest text-on-surface-variant font-bold uppercase">PROGRESO DEL MISTERIO</span>
+<span aria-live="polite" class="font-sacred text-2xl text-secondary font-bold">Ave María 3 de 10</span>
+</div>
+<div class="flex justify-between items-center gap-2 overflow-hidden px-1">
+<!-- Completed Beads -->
+<div class="w-8 h-8 rounded-full bg-secondary bead-shadow opacity-50 flex-shrink-0"></div>
+<div class="w-8 h-8 rounded-full bg-secondary bead-shadow opacity-50 flex-shrink-0"></div>
+<!-- Active Bead -->
+<div aria-current="step" class="relative flex-shrink-0">
+<div class="w-12 h-12 rounded-xl bg-secondary active-bead-glow flex items-center justify-center">
+<div class="w-4 h-4 rounded-full bg-primary/40"></div>
+</div>
+</div>
+<!-- Future Beads -->
+<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
+<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
+<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
+<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
+<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
+<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
+<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
+</div>
+</section>
+<!-- Prayer Card -->
+<section aria-label="Texto de la oración" class="bg-surface-container p-10 rounded-xl shadow-sm mb-12 border border-outline-variant/30">
+<div class="max-w-2xl mx-auto">
+<p class="font-sacred text-[1.75rem] leading-snug text-on-background text-center font-medium">
+                    Dios te salve, María, llena eres de gracia; el Señor es contigo. Bendita Tú eres entre todas las mujeres, y bendito es el fruto de tu vientre, Jesús. 
+                    <br/><br/>
+<strong class="font-bold">Santa María, Madre de Dios, ruega por nosotros, pecadores, ahora y en la hora de nuestra muerte. Amén.</strong>
+</p>
+</div>
+</section>
+<!-- Audio Controls -->
+<section aria-label="Controles de audio" class="flex flex-col gap-8 max-w-lg mx-auto" role="region">
+<div class="flex items-center justify-center gap-12">
+<button aria-label="Retroceder 10 segundos" class="text-primary hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-container w-16 h-16 flex items-center justify-center">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'wght' 700;">replay_10</span>
+</button>
+<!-- Main Toggle - Large for accessibility -->
+<button aria-label="Pausar oración" class="rounded-xl bg-primary text-secondary flex items-center justify-center shadow-xl active:scale-95 transition-transform w-32 h-32">
+<span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1, 'wght' 700;">pause</span>
+</button>
+<button aria-label="Adelantar 10 segundos" class="text-primary hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-container w-16 h-16 flex items-center justify-center">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'wght' 700;">forward_10</span>
+</button>
+</div>
+<!-- Volume Slider -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-6 bg-surface-container p-5 rounded-xl border border-outline-variant/20">
+<span aria-hidden="true" class="material-symbols-outlined text-primary text-3xl">volume_down</span>
+<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="66" class="relative flex-grow h-3 bg-gray-300 rounded-full overflow-hidden" role="progressbar">
+<div class="absolute top-0 left-0 h-full w-2/3 bg-secondary"></div>
+</div>
+<span aria-hidden="true" class="material-symbols-outlined text-primary text-3xl">volume_up</span>
+</div>
+<p class="text-center font-label text-xs text-on-surface-variant tracking-widest uppercase font-bold">Reproducir/Pausar Guía de Voz</p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav aria-label="Navegación entre misterios" class="fixed bottom-0 w-full h-24 z-50 bg-primary flex justify-around items-center px-6 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.3)]" role="navigation">
+<button aria-label="Ir al anterior misterio o cuenta" class="flex flex-col items-center justify-center text-secondary px-8 py-3 rounded-xl hover:bg-white/10 transition-all">
+<span aria-hidden="true" class="material-symbols-outlined mb-1" style="font-variation-settings: 'wght' 800;">arrow_back_ios</span>
+<span class="font-label text-xs font-bold tracking-[0.2em]">ANTERIOR</span>
+</button>
+<div class="h-10 w-px bg-secondary/30"></div>
+<button aria-label="Ir al siguiente misterio o cuenta" class="flex flex-col items-center justify-center bg-secondary/20 border border-secondary/50 rounded-xl px-8 py-3 text-secondary hover:bg-secondary/30 transition-all">
+<span aria-hidden="true" class="material-symbols-outlined mb-1" style="font-variation-settings: 'wght' 800;">arrow_forward_ios</span>
+<span class="font-label text-xs font-bold tracking-[0.2em]">SIGUIENTE</span>
+</button>
+</nav>
+</body></html>
