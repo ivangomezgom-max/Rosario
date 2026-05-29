@@ -153,5 +153,77 @@
 
         setRandomBg();
     });
+      <script>
+  // 1. Lógica para el Reloj y la Fecha en tiempo real
+  function actualizarReloj() {
+    const ahora = new Date();
+    
+    // Formatear la hora (ej: 10:30 AM)
+    let horas = ahora.getHours();
+    const minutos = String(now.getMinutes()).padStart(2, '0');
+    const ampm = horas >= 12 ? 'PM' : 'AM';
+    horas = horas % 12;
+    horas = horas ? horas : 12; // el número 0 debe ser 12
+    
+    // Formatear la fecha (ej: Lunes, 12 de Junio)
+    const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', opcionesFecha);
+    // Capitalizar la primera letra
+    const fechaFinal = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
+
+    // Buscar los elementos que creó Stitch por su texto e inyectar los datos reales
+    // Nota: Si Stitch usó IDs o clases específicas, este script busca los bloques de texto.
+    document.body.innerHTML = document.body.innerHTML
+      .replace(/10:30\s*AM/g, `${horas}:${minutos} ${ampm}`)
+      .replace(/Lunes,\s*12\s*de\s*Junio/g, fechaFinal);
+  }
+
+  // 2. Lógica para calcular el Misterio del Día
+  function configurarMisterioDelDia() {
+    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const hoy = diasSemana[new Date().getDay()];
+    
+    let misterioHoy = '';
+    if (hoy === 'Lunes' || hoy === 'Sábado') misterioHoy = 'Gozosos';
+    else if (hoy === 'Martes' || hoy === 'Viernes') misterioHoy = 'Dolorosos';
+    else if (hoy === 'Miércoles' || hoy === 'Domingo') misterioHoy = 'Gloriosos';
+    else if (hoy === 'Jueves') misterioHoy = 'Luminosos';
+
+    // Guardamos el misterio de hoy en la memoria del teléfono para usarlo en las siguientes pantallas
+    localStorage.setItem('misterioSeleccionado', misterioHoy);
+
+    // Reemplazar el texto del botón dinámicamente
+    document.body.innerHTML = document.body.innerHTML
+      .replace(/Misterios\s*Gozosos\s*—\s*Lunes/g, `Misterios ${misterioHoy} — ${hoy}`);
+  }
+
+  // 3. Hacer que los botones funcionen y salten de pantalla
+  function activarBotones() {
+    // Buscamos el contenedor o botón que dice "Rezar los Misterios de Hoy"
+    const elementos = document.getElementsByTagName('*');
+    for (let el of elementos) {
+      if (el.innerText && el.innerText.includes('Rezar los Misterios')) {
+        el.style.cursor = 'pointer';
+        el.onclick = function() {
+          window.location.href = 'oracion.html'; // Salta directo a la pantalla de oración
+        };
+      }
+      if (el.innerText && el.innerText.includes('AJUSTES')) {
+        el.style.cursor = 'pointer';
+        el.onclick = function() {
+          window.location.href = 'misterios.html'; // Salta al menú de selección manual
+        };
+      }
+    }
+  }
+
+  // Ejecutar todo cuando cargue la pantalla
+  window.onload = function() {
+    configurarMisterioDelDia();
+    actualizarReloj();
+    activarBotones();
+    setInterval(actualizarReloj, 60000); // Actualiza el reloj cada minuto
+  };
+</script>
 </script>
 </body></html>
