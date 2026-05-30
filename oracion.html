@@ -154,105 +154,122 @@
 </nav>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. Recuperar el misterio que guardamos en la pantalla de inicio
-        const tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || 'Gozosos';
+        // 1. Obtener el misterio del almacenamiento (por defecto Dolorosos si es viernes)
+        const tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || 'Dolorosos';
         let listaMisterios = [];
         let indiceActual = 0;
 
-        // Elementos de la interfaz que diseñó Stitch (Búsqueda por selectores)
-        const tituloMisterioEl = document.querySelector('h2') || document.querySelector('.font-display');
-        const subtituloMisterioEl = document.querySelector('span.text-secondary') || document.querySelector('p');
-        const textoMeditacionEl = document.querySelector('main p') || document.querySelector('.font-body');
-        const controlAudioEl = document.querySelector('audio') || document.querySelector('audio');
-        const bgDinamico = document.getElementById('dynamic-bg');
+        // 2. Mapeo ultrapreciso de elementos según las clases reales de tu HTML
+        const tituloMisterioEl = document.querySelector('.font-display.text-primary') || document.querySelector('h1');
+        const subtituloMisterioEl = document.querySelector('.tracking-widest.text-secondary');
+        const textoMeditacionEl = document.querySelector('.font-body.text-on-background\\/80') || document.querySelector('p.text-base');
+        const bgDinamico = document.querySelector('.bg-cover');
+        
+        // Buscar el reproductor de audio oculto o visible
+        const controlAudioEl = document.querySelector('audio');
 
-        // 2. Consumir el archivo JSON de manera nativa
+        console.log("Iniciando carga del Rosario. Tipo de misterio:", tipoMisterioActual);
+
+        // 3. Consumir el archivo JSON local
         fetch('rosario.json')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error("No se pudo leer el archivo rosario.json");
+                return response.json();
+            })
             .then(data => {
-                // Filtrar el JSON para quedarnos solo con el tipo de misterio de hoy (ej: Gozoso)
-                // Usamos un prototipo de búsqueda flexible para acentos o letras (Gozosos -> Gozoso)
-                const terminoBusqueda = tipoMisterioActual.replace('sos', ''); 
+                // Filtrar flexible (ej: "Dolorosos" busca "Doloroso")
+                const terminoBusqueda = tipoMisterioActual.replace('sos', '');
                 listaMisterios = data.filter(item => item["Tipo de Misterio"] && item["Tipo de Misterio"].includes(terminoBusqueda));
 
+                console.log("Misterios filtrados encontrados:", listaMisterios.length);
+
                 if (listaMisterios.length > 0) {
-                    cargarMisterio(0); // Cargar el primer misterio por defecto
+                    cargarMisterio(0); // Cargar el primer misterio encontrado
                 } else {
-                    console.error("No se encontraron misterios para el tipo:", tipoMisterioActual);
+                    if (textoMeditacionEl) textoMeditacionEl.textContent = `No se encontraron misterios de tipo ${tipoMisterioActual} en el archivo JSON.`;
                 }
             })
-            .catch(error => console.error("Error cargando el archivo JSON:", error));
+            .catch(error => {
+                console.error("Error cargando los datos:", error);
+                if (textoMeditacionEl) textoMeditacionEl.textContent = "Error al conectar con la base de datos de oraciones. Verifica el archivo JSON.";
+            });
 
-        // 3. Función para pintar los datos del misterio en la pantalla
+        // 4. Función encargada de actualizar la pantalla con los datos reales
         function cargarMisterio(indice) {
             if (indice < 0 || indice >= listaMisterios.length) return;
             indiceActual = indice;
             const misterio = listaMisterios[indiceActual];
 
-            // Inyectar Título y Número del Misterio
+            // Inyectar textos de forma limpia reemplazando la plantilla fija
             if (tituloMisterioEl) tituloMisterioEl.textContent = misterio["Título del Misterio"];
-            if (subtituloMisterioEl) subtituloMisterioEl.textContent = `${tipoMisterioActual.toUpperCase()} - Misterio Real ${misterio["Número de Misterio"] || (indiceActual + 1)}`;
-            
-            // Inyectar el Texto de Meditación
-            if (textoMeditacionEl) textoMeditacionEl.textContent = misterio["Texto de Meditación"];
+            if (subtituloMisterioEl) {
+                subtituloMisterioEl.textContent = `${tipoMisterioActual.toUpperCase()} — MISTERIO ${misterio["Número de Misterio"] || (indiceActual + 1)}`;
+            }
+            if (textoMeditacionEl) {
+                textoMeditacionEl.textContent = misterio["Texto de Meditación"];
+                // Garantizar que el cuadro de texto se desplace al inicio si la meditación es larga
+                textoMeditacionEl.scrollTop = 0;
+            }
 
-            // Actualizar la imagen de fondo con el enlace corregido de Google Drive
+            // Cambiar imagen de fondo dinámicamente con la URL directa de Drive
             if (bgDinamico && misterio["Enlace de Imagen"]) {
                 bgDinamico.style.backgroundImage = `url('${misterio["Enlace de Imagen"]}')`;
             }
 
-            // Actualizar el reproductor de Audio con el enlace directo de Google Drive
+            // Cambiar la pista de audio en el reproductor
             if (controlAudioEl && misterio["Enlace de Audio"]) {
                 controlAudioEl.src = misterio["Enlace de Audio"];
-                controlAudioEl.load(); // Recargar el reproductor con el nuevo archivo de voz
+                controlAudioEl.load(); // Forzar la recarga del nuevo archivo
+                console.log(`Audio cargado para el misterio ${indiceActual + 1}:`, misterio["Enlace de Audio"]);
             }
 
-            // Resetear visualmente las cuentas de progreso (Las esferas de Stitch)
-            actualizarCuentasProgreso(indiceActual);
+            // Actualizar visualmente los indicadores de cuentas (los círculos dorados/azules)
+            actualizarIndicadoresCuentas(indiceActual);
         }
 
-        // Iluminar la cuenta del misterio actual
-        function actualizarCuentasProgreso(misterioIdx) {
-            const cuentas = document.querySelectorAll('main .rounded-full, main .inline-block');
-            cuentas.forEach((cuenta, idx) => {
+        // Función para cambiar de color los círculos indicadores que hizo Stitch
+        function actualizarIndicadoresCuentas(misterioIdx) {
+            // Buscar los pequeños círculos en el área central
+            const circulos = document.querySelectorAll('.w-2.h-2, .w-3.h-3');
+            circulos.forEach((circulo, idx) => {
                 if (idx === misterioIdx) {
-                    cuenta.style.backgroundColor = '#C9A227'; // Dorado para el activo
-                    cuenta.style.transform = 'scale(1.2)';
+                    circulo.className = "w-3 h-3 rounded-full bg-secondary transition-all transform scale-125"; // Activo (Dorado)
                 } else if (idx < misterioIdx) {
-                    cuenta.style.backgroundColor = '#1E3A5F'; // Azul para los completados
-                    cuenta.style.opacity = '0.5';
+                    circulo.className = "w-2 h-2 rounded-full bg-primary opacity-40 transition-all"; // Completado (Azul tenue)
                 } else {
-                    cuenta.style.backgroundColor = '#E5E7EB'; // Gris para los pendientes
-                    cuenta.style.opacity = '1';
+                    circulo.className = "w-2 h-2 rounded-full bg-gray-300 opacity-100 transition-all"; // Pendiente (Gris)
                 }
             });
         }
 
-        // 4. Conectar los botones de navegación inferior
-        const btnAnterior = document.querySelector('button[aria-label*="Anterior"]');
-        const btnSiguiente = document.querySelector('button[aria-label*="Siguiente"]');
-
-        if (btnSiguiente) {
-            btnSiguiente.addEventListener('click', () => {
-                if (indiceActual < listaMisterios.length - 1) {
-                    cargarMisterio(indiceActual + 1); // Avanzar al siguiente misterio
-                } else {
-                    // Si llegó al final, regresa al Home felicitando el día
-                    alert("¡Has terminado el Santo Rosario de hoy! Dios te bendiga.");
-                    window.location.href = 'index.html';
-                }
-            });
-        }
-
-        if (btnAnterior) {
-            btnAnterior.addEventListener('click', () => {
-                if (indiceActual > 0) {
-                    cargarMisterio(indiceActual - 1); // Retroceder al misterio anterior
-                } else {
-                    window.location.href = 'index.html'; // Si está en el primero, regresa al inicio
-                }
-            });
-        }
+        // 5. Configurar los botones de navegación inferior de Stitch
+        const botones = document.querySelectorAll('button');
+        botones.forEach(btn => {
+            const textoBoton = btn.innerText ? btn.innerText.toUpperCase() : '';
+            
+            if (textoBoton.includes('SIGUIENTE')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (indiceActual < listaMisterios.length - 1) {
+                        cargarMisterio(indiceActual + 1);
+                    } else {
+                        alert("¡Has terminado las meditaciones del Santo Rosario de hoy! Dios te bendiga.");
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+            
+            if (textoBoton.includes('ANTERIOR')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (indiceActual > 0) {
+                        cargarMisterio(indiceActual - 1);
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        });
     });
 </script>      
 </body></html>
