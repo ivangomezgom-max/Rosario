@@ -152,4 +152,107 @@
 <span class="font-label text-xs font-bold tracking-[0.2em]">SIGUIENTE</span>
 </button>
 </nav>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Recuperar el misterio que guardamos en la pantalla de inicio
+        const tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || 'Gozosos';
+        let listaMisterios = [];
+        let indiceActual = 0;
+
+        // Elementos de la interfaz que diseñó Stitch (Búsqueda por selectores)
+        const tituloMisterioEl = document.querySelector('h2') || document.querySelector('.font-display');
+        const subtituloMisterioEl = document.querySelector('span.text-secondary') || document.querySelector('p');
+        const textoMeditacionEl = document.querySelector('main p') || document.querySelector('.font-body');
+        const controlAudioEl = document.querySelector('audio') || document.querySelector('audio');
+        const bgDinamico = document.getElementById('dynamic-bg');
+
+        // 2. Consumir el archivo JSON de manera nativa
+        fetch('rosario.json')
+            .then(response => response.json())
+            .then(data => {
+                // Filtrar el JSON para quedarnos solo con el tipo de misterio de hoy (ej: Gozoso)
+                // Usamos un prototipo de búsqueda flexible para acentos o letras (Gozosos -> Gozoso)
+                const terminoBusqueda = tipoMisterioActual.replace('sos', ''); 
+                listaMisterios = data.filter(item => item["Tipo de Misterio"] && item["Tipo de Misterio"].includes(terminoBusqueda));
+
+                if (listaMisterios.length > 0) {
+                    cargarMisterio(0); // Cargar el primer misterio por defecto
+                } else {
+                    console.error("No se encontraron misterios para el tipo:", tipoMisterioActual);
+                }
+            })
+            .catch(error => console.error("Error cargando el archivo JSON:", error));
+
+        // 3. Función para pintar los datos del misterio en la pantalla
+        function cargarMisterio(indice) {
+            if (indice < 0 || indice >= listaMisterios.length) return;
+            indiceActual = indice;
+            const misterio = listaMisterios[indiceActual];
+
+            // Inyectar Título y Número del Misterio
+            if (tituloMisterioEl) tituloMisterioEl.textContent = misterio["Título del Misterio"];
+            if (subtituloMisterioEl) subtituloMisterioEl.textContent = `${tipoMisterioActual.toUpperCase()} - Misterio Real ${misterio["Número de Misterio"] || (indiceActual + 1)}`;
+            
+            // Inyectar el Texto de Meditación
+            if (textoMeditacionEl) textoMeditacionEl.textContent = misterio["Texto de Meditación"];
+
+            // Actualizar la imagen de fondo con el enlace corregido de Google Drive
+            if (bgDinamico && misterio["Enlace de Imagen"]) {
+                bgDinamico.style.backgroundImage = `url('${misterio["Enlace de Imagen"]}')`;
+            }
+
+            // Actualizar el reproductor de Audio con el enlace directo de Google Drive
+            if (controlAudioEl && misterio["Enlace de Audio"]) {
+                controlAudioEl.src = misterio["Enlace de Audio"];
+                controlAudioEl.load(); // Recargar el reproductor con el nuevo archivo de voz
+            }
+
+            // Resetear visualmente las cuentas de progreso (Las esferas de Stitch)
+            actualizarCuentasProgreso(indiceActual);
+        }
+
+        // Iluminar la cuenta del misterio actual
+        function actualizarCuentasProgreso(misterioIdx) {
+            const cuentas = document.querySelectorAll('main .rounded-full, main .inline-block');
+            cuentas.forEach((cuenta, idx) => {
+                if (idx === misterioIdx) {
+                    cuenta.style.backgroundColor = '#C9A227'; // Dorado para el activo
+                    cuenta.style.transform = 'scale(1.2)';
+                } else if (idx < misterioIdx) {
+                    cuenta.style.backgroundColor = '#1E3A5F'; // Azul para los completados
+                    cuenta.style.opacity = '0.5';
+                } else {
+                    cuenta.style.backgroundColor = '#E5E7EB'; // Gris para los pendientes
+                    cuenta.style.opacity = '1';
+                }
+            });
+        }
+
+        // 4. Conectar los botones de navegación inferior
+        const btnAnterior = document.querySelector('button[aria-label*="Anterior"]');
+        const btnSiguiente = document.querySelector('button[aria-label*="Siguiente"]');
+
+        if (btnSiguiente) {
+            btnSiguiente.addEventListener('click', () => {
+                if (indiceActual < listaMisterios.length - 1) {
+                    cargarMisterio(indiceActual + 1); // Avanzar al siguiente misterio
+                } else {
+                    // Si llegó al final, regresa al Home felicitando el día
+                    alert("¡Has terminado el Santo Rosario de hoy! Dios te bendiga.");
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+
+        if (btnAnterior) {
+            btnAnterior.addEventListener('click', () => {
+                if (indiceActual > 0) {
+                    cargarMisterio(indiceActual - 1); // Retroceder al misterio anterior
+                } else {
+                    window.location.href = 'index.html'; // Si está en el primero, regresa al inicio
+                }
+            });
+        }
+    });
+</script>      
 </body></html>
