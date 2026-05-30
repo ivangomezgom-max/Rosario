@@ -61,6 +61,7 @@
 </head>
 <body class="bg-background text-on-background font-body min-h-screen flex flex-col">
 <!-- TopAppBar -->
+<audio id="audio-rosario" preload="auto"></audio>
 <header class="fixed top-0 w-full z-50 bg-primary shadow-md flex justify-between items-center px-6 py-4" role="banner">
 <div class="flex items-center gap-3">
 <span aria-hidden="true" class="material-symbols-outlined text-secondary" style="font-variation-settings: 'wght' 700;">menu_book</span>
@@ -154,32 +155,31 @@
 </nav>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. Sincronización del almacenamiento local (Acoplado al index.html)
+        // 1. Sincronización del almacenamiento local
         const tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || 'Gozosos';
         let listaMisterios = [];
         let indiceActual = 0;
 
-        // Desactivar el botón de ajustes secundario
-        const btnAjustes = document.querySelector('button[aria-label*="ajustes"]');
+        // Corregir el botón de ajustes superior para que vaya a misterios.html
+        const btnAjustes = document.querySelector('button') && Array.from(document.querySelectorAll('button')).find(el => el.innerText.includes('AJUSTES'));
         if (btnAjustes) {
             btnAjustes.addEventListener('click', (e) => {
                 e.preventDefault();
-                window.location.href = 'index.html';
+                e.stopPropagation();
+                window.location.href = 'misterios.html';
             });
         }
 
-        // 2. Selectores de Interfaz basados en tu HTML real de Stitch
+        // 2. Selectores de Interfaz basados en Stitch
         const tituloSuperior = document.querySelector('h2.font-headline') || document.querySelector('h2'); 
         const cabeceraMisterio = document.querySelector('p.font-sacred.text-secondary') || document.querySelector('.tracking-widest'); 
-        // Apunta directamente al párrafo dentro de la sección de lectura central
         const cuadroTextoCentral = document.querySelector('section[aria-label="Texto de la oración"] p') || document.querySelector('.font-body'); 
 
-        // 3. Crear el motor de reproducción de audio nativo
-        const audioMotor = document.createElement('audio');
-        document.body.appendChild(audioMotor);
+        // Capturar el elemento de audio físico que agregamos en el HTML
+        const audioMotor = document.getElementById('audio-rosario');
 
-        // Capturar el botón de reproducción multimedia central
-        const btnPlayPausa = document.querySelector('button[aria-label*="oración"]') || document.querySelector('.bg-secondary.rounded-full'); 
+        // Capturar el botón de reproducción multimedia central de Stitch
+        const btnPlayPausa = document.querySelector('button[aria-label*="oración"]') || document.querySelector('.bg-secondary.rounded-full') || document.querySelector('main button'); 
         const iconoPlayPausa = btnPlayPausa ? btnPlayPausa.querySelector('.material-symbols-outlined') : null;
 
         // 4. Carga de tu archivo rosario.json
@@ -189,7 +189,6 @@
                 return response.json();
             })
             .then(data => {
-                // Filtrado limpio adaptado a tu JSON (Gozoso, Doloroso, Glorioso, Luminoso)
                 const termino = tipoMisterioActual.replace('sos', '');
                 listaMisterios = data.filter(item => item["Tipo de Misterio"] && item["Tipo de Misterio"].includes(termino));
 
@@ -202,7 +201,7 @@
                 if (cuadroTextoCentral) cuadroTextoCentral.textContent = "Error al conectar con rosario.json";
             });
 
-        // 5. Inyección síncrona de datos en las pantallas
+        // 5. Inyección de datos en la pantalla
         function cargarMisterioContenido(indice) {
             if (indice < 0 || indice >= listaMisterios.length) return;
             indiceActual = indice;
@@ -219,32 +218,32 @@
                 cuadroTextoCentral.innerHTML = `<span class="block text-center font-sacred text-2xl md:text-3xl text-primary font-bold mb-4">Meditación</span>${misterio["Texto de Meditación"]}`;
             }
 
-            // Aplicar tus fondos de pantalla directos
+            // Aplicar tus fondos de pantalla directos si existen
             const bgDinamico = document.querySelector('.bg-cover') || document.body;
             if (bgDinamico && misterio["Enlace de Imagen"]) {
                 bgDinamico.style.backgroundImage = `url('${misterio["Enlace de Imagen"]}')`;
             }
 
-            // Cargar tus audios nativos directos del JSON sin alterarlos
-            if (misterio["Enlace de Audio"]) {
+            // Cargar el audio nativo directo de tu JSON
+            if (audioMotor && misterio["Enlace de Audio"]) {
                 audioMotor.src = misterio["Enlace de Audio"];
                 audioMotor.load();
                 
-                // Si el usuario ya venía escuchando, reproducir el siguiente misterio automáticamente
+                // Si el icono está en modo pausa, reproducir el siguiente automáticamente de forma fluida
                 if (iconoPlayPausa && iconoPlayPausa.textContent === 'pause') {
-                    audioMotor.play().catch(e => console.log("Audio en espera de pulsación"));
+                    audioMotor.play().catch(e => console.log("Esperando interacción del usuario"));
                 }
             }
 
-            // Sincronizar el marcador dinámico de Stitch
-            const contadorTexto = document.querySelector('[aria-live="polite"]');
+            // Sincronizar el marcador de progreso ("Misterio X de 5")
+            const contadorTexto = document.querySelector('[aria-live="polite"]') || Array.from(document.querySelectorAll('p')).find(el => el.innerText.includes('Misterio'));
             if (contadorTexto) {
                 contadorTexto.textContent = `Misterio ${indiceActual + 1} de 5`;
             }
         }
 
-        // 6. Lógica de Control de Audio (Play / Pausa)
-        if (btnPlayPausa) {
+        // 6. Lógica de Control de Audio (Play / Pausa sin alertas molestas)
+        if (btnPlayPausa && audioMotor) {
             btnPlayPausa.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (audioMotor.paused) {
@@ -253,8 +252,7 @@
                             if (iconoPlayPausa) iconoPlayPausa.textContent = 'pause';
                         })
                         .catch(err => {
-                            console.error(err);
-                            alert("Reproduciendo audio desde la nube...");
+                            console.error("Error de reproducción:", err);
                         });
                 } else {
                     audioMotor.pause();
@@ -267,14 +265,16 @@
         const btnRetroceder = document.querySelector('button[aria-label*="Retroceder"]');
         const btnAdelantar = document.querySelector('button[aria-label*="Adelantar"]');
 
-        if (btnRetroceder) {
-            btnRetroceder.addEventListener('click', () => { audioMotor.currentTime = Math.max(0, audioMotor.currentTime - 10); });
-        }
-        if (btnAdelantar) {
-            btnAdelantar.addEventListener('click', () => { audioMotor.currentTime = Math.min(audioMotor.duration || 0, audioMotor.currentTime + 10); });
+        if (audioMotor) {
+            if (btnRetroceder) {
+                btnRetroceder.addEventListener('click', () => { audioMotor.currentTime = Math.max(0, audioMotor.currentTime - 10); });
+            }
+            if (btnAdelantar) {
+                btnAdelantar.addEventListener('click', () => { audioMotor.currentTime = Math.min(audioMotor.duration || 0, audioMotor.currentTime + 10); });
+            }
         }
 
-        // 7. Navegación Inferior (Botones de la barra azul)
+        // 7. Navegación Inferior (Botones Anterior / Siguiente de la barra azul)
         const botonesNavegacion = document.querySelectorAll('nav button');
         botonesNavegacion.forEach(btn => {
             btn.addEventListener('click', (e) => {
