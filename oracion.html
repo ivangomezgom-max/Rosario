@@ -154,121 +154,134 @@
 </nav>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. Obtener el misterio del almacenamiento (por defecto Dolorosos si es viernes)
-        const tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || 'Dolorosos';
+        // 1. Configuración de Base de Datos y Estado
+        const tipoMisterioActual = localStorage.getItem('misterioSelected') || 'Dolorosos';
         let listaMisterios = [];
         let indiceActual = 0;
 
-        // 2. Mapeo ultrapreciso de elementos según las clases reales de tu HTML
-        const tituloMisterioEl = document.querySelector('.font-display.text-primary') || document.querySelector('h1');
-        const subtituloMisterioEl = document.querySelector('.tracking-widest.text-secondary');
-        const textoMeditacionEl = document.querySelector('.font-body.text-on-background\\/80') || document.querySelector('p.text-base');
-        const bgDinamico = document.querySelector('.bg-cover');
-        
-        // Buscar el reproductor de audio oculto o visible
-        const controlAudioEl = document.querySelector('audio');
+        // Omitir el botón ajustes (Desactivar su redirección molesta)
+        const btnAjustes = document.querySelector('button[aria-label*="ajustes"]');
+        if (btnAjustes) {
+            btnAjustes.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = 'index.html'; // Lo regresamos al Home limpiamente
+            });
+        }
 
-        console.log("Iniciando carga del Rosario. Tipo de misterio:", tipoMisterioActual);
+        // 2. Selectores de Texto Ultraprecisos para la estructura de Stitch
+        const tituloSuperior = document.querySelector('h2.font-headline'); // "La Anunciación"
+        const cabeceraMisterio = document.querySelector('p.font-sacred.text-secondary'); // "PRIMER MISTERIO GOZOSO"
+        const cuadroTextoCentral = document.querySelector('section[aria-label="Texto de la oración"] p'); // Recuadro blanco central
 
-        // 3. Consumir el archivo JSON local
-        fetch('rosario.json')
+        // 3. Crear el motor de Audio dinámico e invisible
+        const audioMotor = document.createElement('audio');
+        document.body.appendChild(audioMotor);
+
+        // Controladores visuales del reproductor de Stitch
+        const btnPlayPausa = document.querySelector('button[aria-label*="oración"]'); // Botón gigante central de pausa
+        const iconoPlayPausa = btnPlayPausa ? btnPlayPausa.querySelector('.material-symbols-outlined') : null;
+
+        // 4. Consumir el archivo JSON local
+        fetch('Archivo_JSON_Contenido_Rosario.json')
             .then(response => {
-                if (!response.ok) throw new Error("No se pudo leer el archivo rosario.json");
+                if (!response.ok) throw new Error("Error leyendo JSON");
                 return response.json();
             })
             .then(data => {
-                // Filtrar flexible (ej: "Dolorosos" busca "Doloroso")
-                const terminoBusqueda = tipoMisterioActual.replace('sos', '');
-                listaMisterios = data.filter(item => item["Tipo de Misterio"] && item["Tipo de Misterio"].includes(terminoBusqueda));
-
-                console.log("Misterios filtrados encontrados:", listaMisterios.length);
+                const termino = tipoMisterioActual.replace('sos', '');
+                listaMisterios = data.filter(item => item["Tipo de Misterio"] && item["Tipo de Misterio"].includes(termino));
 
                 if (listaMisterios.length > 0) {
-                    cargarMisterio(0); // Cargar el primer misterio encontrado
-                } else {
-                    if (textoMeditacionEl) textoMeditacionEl.textContent = `No se encontraron misterios de tipo ${tipoMisterioActual} en el archivo JSON.`;
+                    cargarMisterioContenido(0);
                 }
             })
-            .catch(error => {
-                console.error("Error cargando los datos:", error);
-                if (textoMeditacionEl) textoMeditacionEl.textContent = "Error al conectar con la base de datos de oraciones. Verifica el archivo JSON.";
-            });
+            .catch(err => console.error("Error al procesar el rosario:", err));
 
-        // 4. Función encargada de actualizar la pantalla con los datos reales
-        function cargarMisterio(indice) {
+        // 5. Función de carga simultánea (Modifica arriba y al centro al mismo tiempo)
+        function cargarMisterioContenido(indice) {
             if (indice < 0 || indice >= listaMisterios.length) return;
             indiceActual = indice;
             const misterio = listaMisterios[indiceActual];
 
-            // Inyectar textos de forma limpia reemplazando la plantilla fija
-            if (tituloMisterioEl) tituloMisterioEl.textContent = misterio["Título del Misterio"];
-            if (subtituloMisterioEl) {
-                subtituloMisterioEl.textContent = `${tipoMisterioActual.toUpperCase()} — MISTERIO ${misterio["Número de Misterio"] || (indiceActual + 1)}`;
-            }
-            if (textoMeditacionEl) {
-                textoMeditacionEl.textContent = misterio["Texto de Meditación"];
-                // Garantizar que el cuadro de texto se desplace al inicio si la meditación es larga
-                textoMeditacionEl.scrollTop = 0;
+            // Actualizar textos de la zona superior
+            if (tituloSuperior) tituloSuperior.textContent = misterio["Título del Misterio"];
+            if (cabeceraMisterio) {
+                cabeceraMisterio.textContent = `MISTERIO ${misterio["Número de Misterio"] || (indiceActual + 1)} — ${tipoMisterioActual.toUpperCase()}`;
             }
 
-            // Cambiar imagen de fondo dinámicamente con la URL directa de Drive
-            if (bgDinamico && misterio["Enlace de Imagen"]) {
-                bgDinamico.style.backgroundImage = `url('${misterio["Enlace de Imagen"]}')`;
+            // ¡ACTUALIZACIÓN DEL CENTRO! Inyectamos el texto real de meditación dentro del cuadro blanco
+            if (cuadroTextoCentral) {
+                cuadroTextoCentral.innerHTML = `<span class="block text-center font-sacred text-2xl md:text-3xl text-primary font-bold mb-4">Meditación</span> ${misterio["Texto de Meditación"]}`;
             }
 
-            // Cambiar la pista de audio en el reproductor
-            if (controlAudioEl && misterio["Enlace de Audio"]) {
-                controlAudioEl.src = misterio["Enlace de Audio"];
-                controlAudioEl.load(); // Forzar la recarga del nuevo archivo
-                console.log(`Audio cargado para el misterio ${indiceActual + 1}:`, misterio["Enlace de Audio"]);
+            // Sincronizar e inyectar el Audio de Google Drive
+            if (misterio["Enlace de Audio"]) {
+                audioMotor.src = misterio["Enlace de Audio"];
+                audioMotor.load();
+                
+                // Si estaba reproduciéndose, continuar con el siguiente audio automáticamente
+                if (iconoPlayPausa && iconoPlayPausa.textContent === 'pause') {
+                    audioMotor.play().catch(e => console.log("Espera interacción del usuario"));
+                }
             }
 
-            // Actualizar visualmente los indicadores de cuentas (los círculos dorados/azules)
-            actualizarIndicadoresCuentas(indiceActual);
+            // Actualizar contador numérico lateral ("Ave María X de 10")
+            const contadorTexto = document.querySelector('span.text-secondary.font-bold');
+            if (contadorTexto) {
+                contadorTexto.textContent = `Misterio ${indiceActual + 1} de 5`;
+            }
         }
 
-        // Función para cambiar de color los círculos indicadores que hizo Stitch
-        function actualizarIndicadoresCuentas(misterioIdx) {
-            // Buscar los pequeños círculos en el área central
-            const circulos = document.querySelectorAll('.w-2.h-2, .w-3.h-3');
-            circulos.forEach((circulo, idx) => {
-                if (idx === misterioIdx) {
-                    circulo.className = "w-3 h-3 rounded-full bg-secondary transition-all transform scale-125"; // Activo (Dorado)
-                } else if (idx < misterioIdx) {
-                    circulo.className = "w-2 h-2 rounded-full bg-primary opacity-40 transition-all"; // Completado (Azul tenue)
+        // 6. Lógica de Control del Reproductor de Voz (Play / Pausa)
+        if (btnPlayPausa && iconoPlayPausa) {
+            btnPlayPausa.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (audioMotor.paused) {
+                    audioMotor.play()
+                        .then(() => {
+                            iconoPlayPausa.textContent = 'pause'; // Cambia el icono visual a pausa
+                        })
+                        .catch(err => alert("El audio se está procesando, por favor intenta de nuevo en un momento."));
                 } else {
-                    circulo.className = "w-2 h-2 rounded-full bg-gray-300 opacity-100 transition-all"; // Pendiente (Gris)
+                    audioMotor.pause();
+                    iconoPlayPausa.textContent = 'play_arrow'; // Cambia el icono visual a Play
                 }
             });
         }
 
-        // 5. Configurar los botones de navegación inferior de Stitch
-        const botones = document.querySelectorAll('button');
-        botones.forEach(btn => {
-            const textoBoton = btn.innerText ? btn.innerText.toUpperCase() : '';
-            
-            if (textoBoton.includes('SIGUIENTE')) {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
+        // Botones de Adelantar y retrasar 10 segundos instalados en la interfaz de Stitch
+        const btnRetroceder = document.querySelector('button[aria-label*="Retroceder"]');
+        const btnAdelantar = document.querySelector('button[aria-label*="Adelantar"]');
+
+        if (btnRetroceder) {
+            btnRetroceder.addEventListener('click', () => { audioMotor.currentTime = Math.max(0, audioMotor.currentTime - 10); });
+        }
+        if (btnAdelantar) {
+            btnAdelantar.addEventListener('click', () => { audioMotor.currentTime = Math.min(audioMotor.duration || 0, audioMotor.currentTime + 10); });
+        }
+
+        // 7. Navegación de los botones inferiores de la barra azul
+        const botonesNavegacion = document.querySelectorAll('nav button');
+        botonesNavegacion.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const esSiguiente = btn.querySelector('span[aria-label*="Siguiente"]') || btn.innerText.includes('SIGUIENTE');
+                
+                if (esSiguiente) {
                     if (indiceActual < listaMisterios.length - 1) {
-                        cargarMisterio(indiceActual + 1);
+                        cargarMisterioContenido(indiceActual + 1);
                     } else {
-                        alert("¡Has terminado las meditaciones del Santo Rosario de hoy! Dios te bendiga.");
+                        alert("¡Has terminado las meditaciones de hoy! Dios te bendiga.");
                         window.location.href = 'index.html';
                     }
-                });
-            }
-            
-            if (textoBoton.includes('ANTERIOR')) {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
+                } else { // Botón Anterior
                     if (indiceActual > 0) {
-                        cargarMisterio(indiceActual - 1);
+                        cargarMisterioContenido(indiceActual - 1);
                     } else {
                         window.location.href = 'index.html';
                     }
-                });
-            }
+                }
+            });
         });
     });
 </script>      
