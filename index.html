@@ -36,103 +36,104 @@
         body { min-height: 100dvh; font-family: 'Open Sans', sans-serif; }
         #dynamic-bg { transition: background-image 1.5s ease-in-out; }
         .text-shadow-sm { text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        /* Suavizado de scroll global para el dispositivo móvil */
+        .custom-scroll-container { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
     </style>
 </head>
-<body class="bg-surface text-on-surface flex flex-col overflow-hidden relative">
+<body class="bg-surface text-on-surface flex flex-col relative min-h-screen">
 
-<!-- Background Layers -->
 <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-2] bg-cover bg-center bg-no-repeat" id="dynamic-bg"></div>
 <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-1] bg-primary/70 backdrop-brightness-75"></div>
 
-<!-- TopAppBar -->
 <header class="fixed top-0 w-full z-50 bg-primary/95 backdrop-blur-md shadow-lg border-b border-secondary/20 flex justify-between items-center px-6 py-4" role="banner">
     <div class="flex items-center gap-3">
         <span aria-hidden="true" class="material-symbols-outlined text-secondary text-2xl">menu_book</span>
         <h1 class="font-display text-lg font-bold text-secondary uppercase tracking-[0.15em]">EL SANTO ROSARIO</h1>
     </div>
     <button id="btn-header-accion" class="bg-transparent border border-white/20 shadow-lg rounded-xl px-4 py-2 text-on-primary/70 text-xs font-bold hover:bg-secondary hover:text-primary transition-all">
-        AJUSTES
+        MENÚ
     </button>
 </header>
 
-<!-- SECCIÓN 1: PANTALLA DE INICIO -->
-<div id="pantalla-inicio" class="flex-1 flex flex-col items-center justify-center p-6 mt-16 mb-24 relative overflow-y-auto w-full z-10">
-    <!-- Decorative Church Icon -->
-    <div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center">
-        <span aria-hidden="true" class="material-symbols-outlined text-[30rem] text-white">church</span>
-    </div>
-    
-    <section class="w-full max-w-xl text-center mb-8 z-10">
-        <div class="flex flex-col items-center space-y-2">
-            <div class="inline-block px-6 py-1.5 bg-secondary/20 backdrop-blur-md rounded-full border border-secondary/40 mb-2">
-                <span class="font-body text-[10px] uppercase tracking-[0.25rem] text-secondary font-bold">Presencia Sagrada</span>
-            </div>
-            <h2 id="reloj-digital" class="font-display text-6xl md:text-7xl font-medium text-white text-shadow-sm tracking-tight">--:--</h2>
-            <div class="h-[2px] w-16 bg-secondary my-2"></div>
-            <p id="fecha-actual" class="font-display text-xl md:text-2xl text-white italic">Cargando fecha...</p>
-        </div>
-    </section>
+<main class="flex-1 flex flex-col pt-20 pb-28 overflow-y-auto custom-scroll-container z-10 w-full px-4 items-center">
 
-    <section class="w-full max-w-md z-10 px-4">
-        <div class="relative group">
-            <div class="absolute -inset-2 bg-secondary/20 rounded-xl blur-xl transition-all duration-500"></div>
-            <button id="btn-comenzar-rosario" class="relative w-full bg-white rounded-xl shadow-2xl flex flex-col items-center justify-center p-6 border-2 border-secondary overflow-hidden">
-                <span class="font-body text-primary text-[10px] tracking-[0.3em] mb-3 uppercase font-extrabold">COMENZAR LA ORACIÓN</span>
-                <span class="font-display text-xl md:text-2xl text-primary text-center leading-tight">
-                    Rezar los Misterios de Hoy
-                    <span id="texto-misterio-hoy" class="block mt-2 text-secondary font-display text-base italic font-medium">
-                        ...
+    <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-8 my-auto relative py-4">
+        <div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center">
+            <span aria-hidden="true" class="material-symbols-outlined text-[24rem] text-white">church</span>
+        </div>
+        
+        <section class="w-full text-center z-10">
+            <div class="flex flex-col items-center space-y-2">
+                <div class="inline-block px-6 py-1.5 bg-secondary/20 backdrop-blur-md rounded-full border border-secondary/40 mb-2">
+                    <span class="font-body text-[10px] uppercase tracking-[0.25rem] text-secondary font-bold">Presencia Sagrada</span>
+                </div>
+                <h2 id="reloj-digital" class="font-display text-6xl font-medium text-white text-shadow-sm tracking-tight">--:--</h2>
+                <div class="h-[2px] w-16 bg-secondary my-2"></div>
+                <p id="fecha-actual" class="font-display text-xl text-white italic">Cargando fecha...</p>
+            </div>
+        </section>
+
+        <section class="w-full z-10">
+            <div class="relative group">
+                <div class="absolute -inset-2 bg-secondary/20 rounded-xl blur-xl transition-all duration-500"></div>
+                <button id="btn-comenzar-rosario" class="relative w-full bg-white rounded-xl shadow-2xl flex flex-col items-center justify-center p-6 border-2 border-secondary overflow-hidden active:scale-95 transition-transform">
+                    <span class="font-body text-primary text-[10px] tracking-[0.3em] mb-3 uppercase font-extrabold">COMENZAR LA ORACIÓN</span>
+                    <span class="font-display text-xl md:text-2xl text-primary text-center leading-tight">
+                        Rezar los Misterios de Hoy
+                        <span id="texto-misterio-hoy" class="block mt-2 text-secondary font-display text-base italic font-medium">
+                            ...
+                        </span>
                     </span>
-                </span>
-            </button>
-        </div>
-        <blockquote class="mt-8 text-center">
-            <p class="font-prayer-quote text-secondary font-medium italic text-lg max-w-xs mx-auto leading-snug drop-shadow-sm">
-                "Donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos."
-            </p>
-        </blockquote>
-    </section>
-</div>
-
-<!-- SECCIÓN 2: PANTALLA DE ORACIÓN (OCULTA POR DEFECTO) -->
-<div id="pantalla-oracion" class="hidden flex-1 flex flex-col p-6 mt-20 mb-24 relative w-full max-w-2xl mx-auto z-10 overflow-y-auto">
-    <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-secondary/30 flex flex-col space-y-4 my-auto max-h-[70vh] overflow-y-auto">
-        <div class="flex justify-between items-center border-b border-secondary/20 pb-2">
-            <span id="txt-contador-pasos" class="text-secondary font-body text-xs font-bold tracking-wider uppercase">MISTERIO 1 DE 5</span>
-            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" id="tag-tipo-misterio">MEDITACIÓN</span>
-        </div>
-        
-        <h3 id="txt-titulo-misterio" class="font-display text-2xl md:text-3xl text-primary font-bold text-center leading-tight">Cargando Misterio...</h3>
-        
-        <p id="txt-meditacion-misterio" class="font-body text-on-surface text-base md:text-lg leading-relaxed text-justify overflow-y-auto pr-1">
-            Cargando la meditación correspondiente...
-        </p>
-
-        <!-- Contenedor del Reproductor de Audio Nativo Estilizado -->
-        <div class="bg-surface-container rounded-xl p-4 flex flex-col items-center justify-center space-y-2 border border-outline/10">
-            <span class="text-[11px] font-bold tracking-widest text-primary/60 uppercase">Audio Guía</span>
-            <div class="flex items-center space-x-6">
-                <button id="audio-btn-rewind" class="text-primary/70 hover:text-secondary"><span class="material-symbols-outlined text-2xl">replay_10</span></button>
-                <button id="audio-btn-play" class="w-14 h-14 bg-secondary text-primary rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-transform">
-                    <span id="audio-icon" class="material-symbols-outlined text-3xl font-bold">play_arrow</span>
                 </button>
-                <button id="audio-btn-forward" class="text-primary/70 hover:text-secondary"><span class="material-symbols-outlined text-2xl">forward_10</span></button>
+            </div>
+            <blockquote class="mt-8 text-center">
+                <p class="font-prayer-quote text-secondary font-medium italic text-lg max-w-xs mx-auto leading-snug drop-shadow-sm">
+                    "Donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos."
+                </p>
+            </blockquote>
+        </section>
+    </div>
+
+    <div id="pantalla-oracion" class="hidden w-full max-w-xl flex flex-col space-y-4 py-2">
+        <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-secondary/30 flex flex-col space-y-5">
+            <div class="flex justify-between items-center border-b border-secondary/20 pb-3">
+                <span id="txt-contador-pasos" class="text-secondary font-body text-xs font-bold tracking-wider uppercase">MISTERIO 1 DE 5</span>
+                <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" id="tag-tipo-misterio">MEDITACIÓN</span>
+            </div>
+            
+            <h3 id="txt-titulo-misterio" class="font-display text-2xl md:text-3xl text-primary font-bold text-center leading-tight">Cargando Misterio...</h3>
+            
+            <p id="txt-meditacion-misterio" class="font-body text-on-surface text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
+                Cargando la meditación correspondiente...
+            </p>
+
+            <div class="bg-surface-container rounded-xl p-4 flex flex-col items-center justify-center space-y-3 border border-outline/10 mt-2">
+                <span class="text-[11px] font-bold tracking-widest text-primary/60 uppercase">Audio Guía</span>
+                <div class="flex items-center space-x-6">
+                    <button id="audio-btn-rewind" class="text-primary/70 hover:text-secondary active:scale-90 transition-transform">
+                        <span class="material-symbols-outlined text-3xl">replay_10</span>
+                    </button>
+                    <button id="audio-btn-play" class="w-16 h-16 bg-secondary text-primary rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+                        <span id="audio-icon" class="material-symbols-outlined text-4xl font-bold">play_arrow</span>
+                    </button>
+                    <button id="audio-btn-forward" class="text-primary/70 hover:text-secondary active:scale-90 transition-transform">
+                        <span class="material-symbols-outlined text-3xl">forward_10</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- SECCIÓN 3: PANTALLA DE AJUSTES/SELECCIÓN (OCULTA POR DEFECTO) -->
-<div id="pantalla-ajustes" class="hidden flex-1 flex flex-col p-6 mt-20 mb-24 relative w-full max-w-md mx-auto z-10 overflow-y-auto">
-    <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-secondary/30 text-center">
-        <h3 class="font-display text-2xl text-primary font-bold mb-6">Seleccionar Misterios</h3>
-        <div class="flex flex-col space-y-3" id="lista-seleccion-misterios">
-            <!-- Botones generados dinámicamente -->
+    <div id="pantalla-ajustes" class="hidden w-full max-w-md flex flex-col py-4">
+        <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-secondary/30 text-center">
+            <h3 class="font-display text-2xl text-primary font-bold mb-6 uppercase tracking-wider">Seleccionar Misterios</h3>
+            <div class="flex flex-col space-y-3.5" id="lista-seleccion-misterios">
+                </div>
         </div>
     </div>
-</div>
 
-<!-- BottomNavBar -->
+</main>
+
 <nav class="fixed bottom-0 w-full h-24 z-50 bg-primary/95 backdrop-blur-md flex justify-around items-center px-6 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.5)] border-t border-white/10" role="navigation">
     <button id="btn-nav-anterior" class="flex flex-col items-center justify-center text-on-primary/40 px-6 py-2 transition-all rounded-lg cursor-not-allowed" disabled>
         <span aria-hidden="true" class="material-symbols-outlined mb-1 text-2xl">arrow_back_ios</span>
@@ -144,9 +145,11 @@
     </button>
 </nav>
 
+<audio id="audio-rosario-master" preload="auto"></audio>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Elementos de Control de Vistas (El Flujo Flawless)
+    // 1. Elementos UI de las Vistas
     const vistaInicio = document.getElementById('pantalla-inicio');
     const vistaOracion = document.getElementById('pantalla-oracion');
     const vistaAjustes = document.getElementById('pantalla-ajustes');
@@ -156,19 +159,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnNavAnterior = document.getElementById('btn-nav-anterior');
     const btnNavSiguiente = document.getElementById('btn-nav-siguiente');
     const lblNavSiguiente = document.getElementById('lbl-nav-siguiente');
+    const contenedorPrincipal = document.querySelector('main');
 
-    let modoActual = 'inicio'; // opciones: inicio, oracion, ajustes
+    let modoActual = 'inicio'; 
 
-    // 2. Setup del Motor de Audio Inteligente
-    let audioMotor = document.createElement('audio');
-    audioMotor.id = 'audio-rosario-master';
-    audioMotor.preload = 'auto';
-    document.body.appendChild(audioMotor);
-
+    // 2. Control de Audio Nativo
+    const audioMotor = document.getElementById('audio-rosario-master');
     const btnPlay = document.getElementById('audio-btn-play');
     const iconPlay = document.getElementById('audio-icon');
 
-    // 3. Estado de la Oración
+    // 3. Variables de Estado
     let listaMisterios = [];
     let indiceActual = 0;
     const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -181,16 +181,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || misterioAsignado;
 
-    // Cambiar de vista dinámicamente sin recargar la página
+    // Manejo de flujo de navegación limpia de pantallas
     function cambiarVista(nuevaVista) {
         modoActual = nuevaVista;
         vistaInicio.classList.add('hidden');
         vistaOracion.classList.add('hidden');
         vistaAjustes.classList.add('hidden');
+        
+        // Hacer scroll automático hacia arriba al cambiar de vista
+        contenedorPrincipal.scrollTop = 0;
 
         if (nuevaVista === 'inicio') {
             vistaInicio.classList.remove('hidden');
-            btnHeader.textContent = 'AJUSTES';
+            btnHeader.textContent = 'MENÚ';
             btnNavAnterior.disabled = true;
             btnNavAnterior.className = "flex flex-col items-center justify-center text-on-primary/40 px-6 py-2 cursor-not-allowed";
             lblNavSiguiente.textContent = "SIGUIENTE";
@@ -206,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. Reloj, Fecha y Fondos de Unsplash
+    // 4. Inicialización estática (Fondo e información temporal)
     const backgroundImages = [
         'https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&w=2071&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1515516089376-88db1e26e9c0?q=80&w=2070&auto=format&fit=crop',
@@ -229,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     actualizarReloj(); setInterval(actualizarReloj, 60000);
 
-    // 5. Carga remota del JSON
+    // 5. Motor de Carga Asíncrono del JSON
     function cargarDatosRosario() {
         fetch('rosario.json')
           .then(res => res.json())
@@ -246,11 +249,18 @@ document.addEventListener('DOMContentLoaded', () => {
         indiceActual = idx;
         const item = listaMisterios[indiceActual];
 
+        // Limpieza absoluta previa para evitar cruce de datos visuales erróneos
+        document.getElementById('txt-contador-pasos').textContent = "";
+        document.getElementById('txt-titulo-misterio').textContent = "";
+        document.getElementById('txt-meditacion-misterio').textContent = "";
+
+        // Inyección limpia de la información correcta
         document.getElementById('txt-contador-pasos').textContent = `Misterio ${indiceActual + 1} de 5`;
         document.getElementById('txt-titulo-misterio').textContent = item["Título del Misterio"];
         document.getElementById('txt-meditacion-misterio').textContent = item["Texto de Meditación"];
         document.getElementById('tag-tipo-misterio').textContent = item["Tipo de Misterio"] || 'MEDITACIÓN';
 
+        // Reset multimedia por cada misterio
         audioMotor.pause();
         iconPlay.textContent = 'play_arrow';
         if (item["Enlace de Audio"]) {
@@ -263,10 +273,14 @@ document.addEventListener('DOMContentLoaded', () => {
         lblNavSiguiente.textContent = (indiceActual === listaMisterios.length - 1) ? "FINALIZAR" : "SIGUIENTE";
     }
 
-    // 6. Interacciones de Control de Pantallas
+    // 6. Manejadores de Eventos (Event Listeners)
     btnHeader.addEventListener('click', () => {
         if (modoActual === 'inicio') cambiarVista('ajustes');
-        else cambiarVista('inicio');
+        else {
+            audioMotor.pause();
+            iconPlay.textContent = 'play_arrow';
+            cambiarVista('inicio');
+        }
     });
 
     btnComenzar.addEventListener('click', () => cambiarVista('oracion'));
@@ -275,18 +289,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modoActual === 'oracion' && indiceActual > 0) {
             renderizarMisterio(indiceActual - 1);
             actualizarBotonesNavegacion();
+            contenedorPrincipal.scrollTop = 0; // Regresa arriba para leer cómodamente
         }
     });
 
     btnNavSiguiente.addEventListener('click', () => {
-        if (modoActual === 'inicio') {
-            cambiarVista('oracion');
-        } else if (modoActual === 'ajustes') {
+        if (modoActual === 'inicio' || modoActual === 'ajustes') {
             cambiarVista('oracion');
         } else if (modoActual === 'oracion') {
             if (indiceActual < listaMisterios.length - 1) {
                 renderizarMisterio(indiceActual + 1);
                 actualizarBotonesNavegacion();
+                contenedorPrincipal.scrollTop = 0; 
             } else {
                 alert("¡Has terminado las meditaciones del día! Dios te bendiga.");
                 audioMotor.pause();
@@ -296,38 +310,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 7. Controles de Reproducción Multimedia
+    // 7. Lógica de Reproducción Robusta para iOS/Safari sin Popups erróneos
     btnPlay.addEventListener('click', () => {
         if (audioMotor.paused) {
             audioMotor.play()
-                .then(() => iconPlay.textContent = 'pause')
-                .catch(err => alert("Por favor presiona de nuevo para dar permisos de audio al móvil."));
+                .then(() => {
+                    iconPlay.textContent = 'pause';
+                })
+                .catch(err => {
+                    console.log("Reintento de reproducción requerido por políticas del móvil:", err);
+                    // Forzado nativo inmediato sin lanzar alertas
+                    audioMotor.play();
+                    iconPlay.textContent = 'pause';
+                });
         } else {
             audioMotor.pause();
             iconPlay.textContent = 'play_arrow';
         }
-    });
-
-    document.getElementById('audio-btn-rewind').addEventListener('click', () => audioMotor.currentTime -= 10);
-    document.getElementById('audio-btn-forward').addEventListener('click', () => audioMotor.currentTime += 10);
-
-    // 8. Construir Menu de Ajustes Dinámico
-    const opcionesMisterios = ['Gozosos', 'Dolorosos', 'Gloriosos', 'Luminosos'];
-    const contenedorAjustes = document.getElementById('lista-seleccion-misterios');
-    opcionesMisterios.forEach(m => {
-        const btn = document.createElement('button');
-        btn.className = "w-full py-3 bg-primary text-white rounded-xl font-body font-semibold hover:bg-secondary hover:text-primary transition-all uppercase tracking-wider text-sm";
-        btn.textContent = `Misterios ${m}`;
-        btn.addEventListener('click', () => {
-            localStorage.setItem('misterioSeleccionado', m);
-            tipoMisterioActual = m;
-            document.getElementById('texto-misterio-hoy').textContent = `(Misterios ${m} — ${hoy})`;
-            cargarDatosRosario();
-            cambiarVista('oracion');
-        });
-        contenedorAjustes.appendChild(btn);
-    });
-});
-</script>
+    </script>
 </body>
 </html>
