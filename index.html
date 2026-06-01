@@ -134,89 +134,123 @@
 </button>
 </nav>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // 1. Imagen de Fondo Aleatoria
-        const backgroundImages = [
-            'https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&w=2071&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1515516089376-88db1e26e9c0?q=80&w=2070&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?q=80&w=2070&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1621274403997-37aae1848b40?q=80&w=2071&auto=format&fit=crop'
-        ];
-        const bgElement = document.getElementById('dynamic-bg');
-        if (bgElement) {
-            const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
-            bgElement.style.backgroundImage = `url('${randomImage}')`;
-        }
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Inicialización del motor de audio nativo y almacenamiento
+    let audioMotor = document.getElementById('audio-rosario-master');
+    if (!audioMotor) {
+      audioMotor = document.createElement('audio');
+      audioMotor.id = 'audio-rosario-master';
+      audioMotor.preload = 'auto';
+      document.body.appendChild(audioMotor);
+    }
 
-        // 2. Lógica de Fecha, Reloj y Misterio Automático
-        const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-        const ahora = new Date();
-        const hoy = diasSemana[ahora.getDay()];
+    let listaMisterios = [];
+    let indiceActual = 0;
+    
+    // Detectar el día actual para preseleccionar los misterios correctos
+    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const hoy = diasSemana[new Date().getDay()];
+    let misterioHoy = 'Gozosos';
 
-        // Calcular Misterio
-        let misterioHoy = 'Gozosos';
-        if (hoy === 'Martes' || hoy === 'Viernes') misterioHoy = 'Dolorosos';
-        else if (hoy === 'Miércoles' || hoy === 'Domingo') misterioHoy = 'Gloriosos';
-        else if (hoy === 'Jueves') misterioHoy = 'Luminosos';
+    if (hoy === 'Lunes' || hoy === 'Sábado') misterioHoy = 'Gozosos';
+    else if (hoy === 'Martes' || hoy === 'Viernes') misterioHoy = 'Dolorosos';
+    else if (hoy === 'Miércoles' || hoy === 'Domingo') misterioHoy = 'Gloriosos';
+    else if (hoy === 'Jueves') misterioHoy = 'Luminosos';
 
-        // Guardar selección para las siguientes pantallas
-        localStorage.setItem('misterioSeleccionado', misterioHoy);
+    const tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || misterioHoy;
 
-        // Actualizar la fecha visualmente
-        const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
-        let fechaFormateada = ahora.toLocaleDateString('es-ES', opcionesFecha);
-        fechaFormateada = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
+    // 2. Cargar datos desde rosario.json
+    fetch('rosario.json')
+      .then(response => {
+        if (!response.ok) throw new Error("Error cargando rosario.json");
+        return response.json();
+      })
+      .then(data => {
+        const termino = tipoMisterioActual.replace('sos', '');
+        listaMisterios = data.filter(item => item["Tipo de Misterio"] && item["Tipo de Misterio"].includes(termino));
         
-        const pFecha = document.querySelector('p.font-display');
-        if (pFecha) pFecha.textContent = fechaFormateada;
-
-        // Actualizar el texto del botón dinámicamente
-        const spanMisterio = document.querySelector('button span.text-secondary');
-        if (spanMisterio) {
-            spanMisterio.textContent = `(Misterios ${misterioHoy} — ${hoy})`;
+        if (listaMisterios.length > 0) {
+          conectarControlesMultimedia();
+          sincronizarMisterioUI(0);
         }
+      })
+      .catch(err => console.error("Fallo la inicialización del Rosario:", err));
 
-        // Reloj en tiempo real
-        const h2Reloj = document.querySelector('h2.font-display');
-        const actualizarReloj = () => {
-            const timeNow = new Date();
-            let horas = timeNow.getHours();
-            const minutos = String(timeNow.getMinutes()).padStart(2, '0');
-            const ampm = horas >= 12 ? 'PM' : 'AM';
-            horas = horas % 12;
-            horas = horas ? horas : 12;
-            if (h2Reloj) {
-                h2Reloj.innerHTML = `${horas}:${minutos} <span class="text-3xl md:text-4xl font-display align-middle opacity-80">${ampm}</span>`;
-            }
-        };
-        actualizarReloj();
-        setInterval(actualizarReloj, 60000);
+    // 3. Sincronizar textos, imágenes y audios en la pantalla activa
+    function sincronizarMisterioUI(indice) {
+      if (indice < 0 || indice >= listaMisterios.length) return;
+      indiceActual = indice;
+      const misterio = listaMisterios[indiceActual];
 
-        // 3. Activación de los Botones de Navegación
-        // Botón Principal de Comenzar Oración
-        const botonComenzar = document.querySelector('button[aria-label*="Rezar los misterios"]');
-        if (botonComenzar) {
-            botonComenzar.removeAttribute('onclick'); // Quitamos el '#' que puso Stitch
-            botonComenzar.addEventListener('click', () => {
-                window.location.href = 'oracion.html';
-            });
-        }
+      // Localizar selectores nativos de la maquetación de la app
+      const tituloMisterio = document.querySelector('h2') || document.querySelector('.font-headline');
+      const meditaciónTexto = document.querySelector('main p.font-body') || document.querySelector('section p');
+      const contadorPasos = document.querySelector('.text-secondary.font-bold') || Array.from(document.querySelectorAll('span')).find(el => el.innerText.includes('Misterio'));
 
-        // Botón de Ajustes (Esquina superior derecha)
-        const botonAjustes = document.querySelector('button[aria-label="Abrir ajustes"]');
-        if (botonAjustes) {
-            botonAjustes.addEventListener('click', () => {
-                window.location.href = 'misterios.html';
-            });
-        }
-        
-        // Botón Siguiente de la barra inferior (Acción rápida)
-        const botonSiguiente = document.querySelector('button[aria-label="Siguiente paso de la oración"]');
-        if (botonSiguiente) {
-            botonSiguiente.addEventListener('click', () => {
-                window.location.href = 'oracion.html';
-            });
-        }
-    });
+      if (tituloMisterio) tituloMisterio.textContent = misterio["Título del Misterio"];
+      if (meditaciónTexto) meditaciónTexto.textContent = misterio["Texto de Meditación"];
+      if (contadorPasos) contadorPasos.textContent = `Misterio ${indiceActual + 1} de 5`;
+
+      // Cargar pista de audio directo de Google Drive sin redirecciones intermitentes
+      if (audioMotor && misterio["Enlace de Audio"]) {
+        audioMotor.src = misterio["Enlace de Audio"];
+        audioMotor.load();
+      }
+    }
+
+    // 4. Enlazar los botones físicos existentes en index.html
+    function conectarControlesMultimedia() {
+      // Buscar el botón de Play/Pausa (el círculo amarillo central de tu video)
+      const btnPlay = document.querySelector('button .text-4xl') || document.querySelector('main button bg-secondary') || document.querySelector('button[aria-label*="reproducción"]');
+      
+      if (btnPlay) {
+        const contenedorBoton = btnPlay.closest('button');
+        contenedorBoton.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (audioMotor.paused) {
+            audioMotor.play()
+              .then(() => {
+                btnPlay.textContent = 'pause'; // Cambia el icono a pausa visualmente
+              })
+              .catch(err => console.log("Permiso de audio requerido por el navegador móvil:", err));
+          } else {
+            audioMotor.pause();
+            btnPlay.textContent = 'play_arrow'; // Vuelve al icono de play
+          }
+        });
+      }
+
+      // Conectar navegación de botones Siguiente y Anterior del footer azul
+      const btnSiguiente = Array.from(document.querySelectorAll('button')).find(el => el.innerText.includes('SIGUIENTE'));
+      const btnAnterior = Array.from(document.querySelectorAll('button')).find(el => el.innerText.includes('ANTERIOR'));
+
+      if (btnSiguiente) {
+        btnSiguiente.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (indiceActual < listaMisterios.length - 1) {
+            sincronizarMisterioUI(indiceActual + 1);
+            const iconoPlay = document.querySelector('button .text-4xl');
+            if (iconoPlay) iconoPlay.textContent = 'play_arrow';
+          } else {
+            alert("¡Has terminado el Santo Rosario de hoy! Dios te bendiga.");
+            location.reload(); // Reinicia al menú principal de forma limpia
+          }
+        });
+      }
+
+      if (btnAnterior) {
+        btnAnterior.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (indiceActual > 0) {
+            sincronizarMisterioUI(indiceActual - 1);
+            const iconoPlay = document.querySelector('button .text-4xl');
+            if (iconoPlay) iconoPlay.textContent = 'play_arrow';
+          }
+        });
+      }
+    }
+  });
 </script>
 </body></html>
