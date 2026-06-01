@@ -36,7 +36,6 @@
         body { min-height: 100dvh; font-family: 'Open Sans', sans-serif; }
         #dynamic-bg { transition: background-image 1.5s ease-in-out; }
         .text-shadow-sm { text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        /* Suavizado de scroll global para el dispositivo móvil */
         .custom-scroll-container { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
     </style>
 </head>
@@ -128,7 +127,11 @@
         <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-secondary/30 text-center">
             <h3 class="font-display text-2xl text-primary font-bold mb-6 uppercase tracking-wider">Seleccionar Misterios</h3>
             <div class="flex flex-col space-y-3.5" id="lista-seleccion-misterios">
-                </div>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-surface hover:bg-secondary/10 transition-colors" onclick="cambiarMisterioManual('Gozosos')">Misterios Gozosos (Lunes y Sábado)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-surface hover:bg-secondary/10 transition-colors" onclick="cambiarMisterioManual('Dolorosos')">Misterios Dolorosos (Martes y Viernes)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-surface hover:bg-secondary/10 transition-colors" onclick="cambiarMisterioManual('Gloriosos')">Misterios Gloriosos (Miércoles y Domingo)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-surface hover:bg-secondary/10 transition-colors" onclick="cambiarMisterioManual('Luminosos')">Misterios Luminosos (Jueves)</button>
+            </div>
         </div>
     </div>
 
@@ -149,7 +152,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Elementos UI de las Vistas
     const vistaInicio = document.getElementById('pantalla-inicio');
     const vistaOracion = document.getElementById('pantalla-oracion');
     const vistaAjustes = document.getElementById('pantalla-ajustes');
@@ -163,12 +165,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let modoActual = 'inicio'; 
 
-    // 2. Control de Audio Nativo
     const audioMotor = document.getElementById('audio-rosario-master');
     const btnPlay = document.getElementById('audio-btn-play');
     const iconPlay = document.getElementById('audio-icon');
+    const btnRewind = document.getElementById('audio-btn-rewind');
+    const btnForward = document.getElementById('audio-btn-forward');
 
-    // 3. Variables de Estado
     let listaMisterios = [];
     let indiceActual = 0;
     const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -181,14 +183,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || misterioAsignado;
 
-    // Manejo de flujo de navegación limpia de pantallas
     function cambiarVista(nuevaVista) {
         modoActual = nuevaVista;
         vistaInicio.classList.add('hidden');
         vistaOracion.classList.add('hidden');
         vistaAjustes.classList.add('hidden');
         
-        // Hacer scroll automático hacia arriba al cambiar de vista
         contenedorPrincipal.scrollTop = 0;
 
         if (nuevaVista === 'inicio') {
@@ -209,7 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. Inicialización estática (Fondo e información temporal)
     const backgroundImages = [
         'https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&w=2071&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1515516089376-88db1e26e9c0?q=80&w=2070&auto=format&fit=crop',
@@ -220,7 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
     let fechaTxt = new Date().toLocaleDateString('es-ES', opcionesFecha);
     document.getElementById('fecha-actual').textContent = fechaTxt.charAt(0).toUpperCase() + fechaTxt.slice(1);
-    document.getElementById('texto-misterio-hoy').textContent = `(Misterios ${tipoMisterioActual} — ${hoy})`;
+    
+    function refrescarEtiquetaInicio() {
+        document.getElementById('texto-misterio-hoy').textContent = `(Misterios ${tipoMisterioActual} — ${hoy})`;
+    }
+    refrescarEtiquetaInicio();
 
     const actualizarReloj = () => {
         const d = new Date();
@@ -232,14 +235,16 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     actualizarReloj(); setInterval(actualizarReloj, 60000);
 
-    // 5. Motor de Carga Asíncrono del JSON
-    function cargarDatosRosario() {
+    // BÚSQUEDA CORREGIDA: Filtra directamente quitando la 's' final para emparejar 'Gozoso', 'Doloroso', etc.
+    window.cargarDatosRosario = function() {
         fetch('rosario.json')
           .then(res => res.json())
           .then(data => {
-            const filtro = tipoMisterioActual.replace('sos', '');
+            const filtro = tipoMisterioActual.endsWith('osos') ? tipoMisterioActual.slice(0, -1) : tipoMisterioActual;
             listaMisterios = data.filter(item => item["Tipo de Misterio"] && item["Tipo de Misterio"].includes(filtro));
-            if(listaMisterios.length > 0) renderizarMisterio(0);
+            if(listaMisterios.length > 0) {
+                renderizarMisterio(0);
+            }
           }).catch(err => console.error("Error leyendo JSON:", err));
     }
     cargarDatosRosario();
@@ -249,18 +254,11 @@ document.addEventListener('DOMContentLoaded', () => {
         indiceActual = idx;
         const item = listaMisterios[indiceActual];
 
-        // Limpieza absoluta previa para evitar cruce de datos visuales erróneos
-        document.getElementById('txt-contador-pasos').textContent = "";
-        document.getElementById('txt-titulo-misterio').textContent = "";
-        document.getElementById('txt-meditacion-misterio').textContent = "";
-
-        // Inyección limpia de la información correcta
         document.getElementById('txt-contador-pasos').textContent = `Misterio ${indiceActual + 1} de 5`;
         document.getElementById('txt-titulo-misterio').textContent = item["Título del Misterio"];
         document.getElementById('txt-meditacion-misterio').textContent = item["Texto de Meditación"];
         document.getElementById('tag-tipo-misterio').textContent = item["Tipo de Misterio"] || 'MEDITACIÓN';
 
-        // Reset multimedia por cada misterio
         audioMotor.pause();
         iconPlay.textContent = 'play_arrow';
         if (item["Enlace de Audio"]) {
@@ -273,7 +271,14 @@ document.addEventListener('DOMContentLoaded', () => {
         lblNavSiguiente.textContent = (indiceActual === listaMisterios.length - 1) ? "FINALIZAR" : "SIGUIENTE";
     }
 
-    // 6. Manejadores de Eventos (Event Listeners)
+    window.cambiarMisterioManual = function(tipo) {
+        tipoMisterioActual = tipo;
+        localStorage.setItem('misterioSeleccionado', tipo);
+        refrescarEtiquetaInicio();
+        cargarDatosRosario();
+        cambiarVista('oracion');
+    }
+
     btnHeader.addEventListener('click', () => {
         if (modoActual === 'inicio') cambiarVista('ajustes');
         else {
@@ -289,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modoActual === 'oracion' && indiceActual > 0) {
             renderizarMisterio(indiceActual - 1);
             actualizarBotonesNavegacion();
-            contenedorPrincipal.scrollTop = 0; // Regresa arriba para leer cómodamente
+            contenedorPrincipal.scrollTop = 0;
         }
     });
 
@@ -310,16 +315,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 7. Lógica de Reproducción Robusta para iOS/Safari sin Popups erróneos
     btnPlay.addEventListener('click', () => {
         if (audioMotor.paused) {
             audioMotor.play()
-                .then(() => {
-                    iconPlay.textContent = 'pause';
-                })
-                .catch(err => {
-                    console.log("Reintento de reproducción requerido por políticas del móvil:", err);
-                    // Forzado nativo inmediato sin lanzar alertas
+                .then(() => { iconPlay.textContent = 'pause'; })
+                .catch(() => {
                     audioMotor.play();
                     iconPlay.textContent = 'pause';
                 });
@@ -327,6 +327,11 @@ document.addEventListener('DOMContentLoaded', () => {
             audioMotor.pause();
             iconPlay.textContent = 'play_arrow';
         }
-    </script>
+    });
+
+    btnRewind.addEventListener('click', () => { audioMotor.currentTime = Math.max(0, audioMotor.currentTime - 10); });
+    btnForward.addEventListener('click', () => { audioMotor.currentTime = Math.min(audioMotor.duration || 0, audioMotor.currentTime + 10); });
+});
+</script>
 </body>
 </html>
