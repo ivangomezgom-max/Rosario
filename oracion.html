@@ -59,133 +59,109 @@
       }
     </style>
 </head>
-<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
-<!-- TopAppBar -->
-<audio id="audio-rosario" preload="auto"></audio>
-<header class="fixed top-0 w-full z-50 bg-primary shadow-md flex justify-between items-center px-6 py-4" role="banner">
-<div class="flex items-center gap-3">
-<span aria-hidden="true" class="material-symbols-outlined text-secondary" style="font-variation-settings: 'wght' 700;">menu_book</span>
-<h1 class="font-headline text-xl font-bold uppercase tracking-[0.2em] text-secondary">EL SANTO ROSARIO</h1>
-</div>
-<button aria-label="Abrir ajustes de la aplicación" class="font-label text-xs font-bold text-secondary hover:opacity-80 transition-opacity tracking-widest bg-white/10 px-4 py-2 rounded-full border border-secondary/20">
+<body class="bg-surface text-on-background min-h-screen flex flex-col antialiased">
+    <audio id="audio-rosario" preload="auto"></audio>
+
+    <div class="flex-1 flex flex-col relative w-full max-w-md mx-auto bg-cover bg-center transition-all duration-700" id="dynamic-bg" style="background-image: url('https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&amp;w=2071&amp;auto=format&amp;fit=crop');">
+      <div class="absolute inset-0 bg-primary/85 backdrop-blur-[2px]"></div>
+      
+      <div class="relative flex-1 flex flex-col p-6 text-white z-10">
+        <header class="flex items-center justify-between mb-8">
+          <button aria-label="Regresar al inicio" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 transition-all" onclick="window.location.href='index.html'">
+            <span class="material-symbols-outlined text-xl">arrow_back</span>
+          </button>
+          <div class="text-center">
+            <p class="font-sacred text-xs tracking-widest text-secondary font-bold uppercase mb-1">MISTERIO 1 — DOLOROSOS</p>
+            <h2 class="font-headline text-2xl text-primary font-bold hidden"></h2>
+          </div>
+          <button id="btn-ajustes-manual" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-xs font-bold tracking-wider">
             AJUSTES
-        </button>
-</header>
-<!-- Main Content Canvas -->
-<main class="flex-grow pt-28 pb-36 px-6 max-w-4xl mx-auto w-full">
-<!-- Mystery Header - Sequential Hierarchy H1 -> H2 -->
-<section class="mb-12 mt-4 text-center md:text-left">
-<p class="font-sacred text-secondary italic text-xl mb-1 font-bold">PRIMER MISTERIO GOZOSO</p>
-<h2 class="font-headline text-5xl text-primary font-bold leading-tight">La Anunciación</h2>
-</section>
-<!-- Visual Progress: Beads -->
-<section aria-label="Progreso del misterio actual" class="mb-16">
-<div class="flex justify-between items-center mb-6 px-2">
-<span class="font-label text-xs tracking-widest text-on-surface-variant font-bold uppercase">PROGRESO DEL MISTERIO</span>
-<span aria-live="polite" class="font-sacred text-2xl text-secondary font-bold">Ave María 3 de 10</span>
-</div>
-<div class="flex justify-between items-center gap-2 overflow-hidden px-1">
-<!-- Completed Beads -->
-<div class="w-8 h-8 rounded-full bg-secondary bead-shadow opacity-50 flex-shrink-0"></div>
-<div class="w-8 h-8 rounded-full bg-secondary bead-shadow opacity-50 flex-shrink-0"></div>
-<!-- Active Bead -->
-<div aria-current="step" class="relative flex-shrink-0">
-<div class="w-12 h-12 rounded-xl bg-secondary active-bead-glow flex items-center justify-center">
-<div class="w-4 h-4 rounded-full bg-primary/40"></div>
-</div>
-</div>
-<!-- Future Beads -->
-<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
-<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
-<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
-<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
-<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
-<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
-<div class="w-8 h-8 rounded-full bg-gray-200 bead-shadow flex-shrink-0"></div>
-</div>
-</section>
-<!-- Prayer Card -->
-<section aria-label="Texto de la oración" class="bg-surface-container p-10 rounded-xl shadow-sm mb-12 border border-outline-variant/30">
-<div class="max-w-2xl mx-auto">
-<p class="font-sacred text-[1.75rem] leading-snug text-on-background text-center font-medium">
-                    Dios te salve, María, llena eres de gracia; el Señor es contigo. Bendita Tú eres entre todas las mujeres, y bendito es el fruto de tu vientre, Jesús. 
-                    <br/><br/>
-<strong class="font-bold">Santa María, Madre de Dios, ruega por nosotros, pecadores, ahora y en la hora de nuestra muerte. Amén.</strong>
-</p>
-</div>
-</section>
-<!-- Audio Controls -->
-<section aria-label="Controles de audio" class="flex flex-col gap-8 max-w-lg mx-auto" role="region">
-<div class="flex items-center justify-center gap-12">
-<button aria-label="Retroceder 10 segundos" class="text-primary hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-container w-16 h-16 flex items-center justify-center">
-<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'wght' 700;">replay_10</span>
-</button>
-<!-- Main Toggle - Large for accessibility -->
-<button aria-label="Pausar oración" class="rounded-xl bg-primary text-secondary flex items-center justify-center shadow-xl active:scale-95 transition-transform w-32 h-32">
-<span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1, 'wght' 700;">pause</span>
-</button>
-<button aria-label="Adelantar 10 segundos" class="text-primary hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-container w-16 h-16 flex items-center justify-center">
-<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'wght' 700;">forward_10</span>
-</button>
-</div>
-<!-- Volume Slider -->
-<div class="flex flex-col gap-3">
-<div class="flex items-center gap-6 bg-surface-container p-5 rounded-xl border border-outline-variant/20">
-<span aria-hidden="true" class="material-symbols-outlined text-primary text-3xl">volume_down</span>
-<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="66" class="relative flex-grow h-3 bg-gray-300 rounded-full overflow-hidden" role="progressbar">
-<div class="absolute top-0 left-0 h-full w-2/3 bg-secondary"></div>
-</div>
-<span aria-hidden="true" class="material-symbols-outlined text-primary text-3xl">volume_up</span>
-</div>
-<p class="text-center font-label text-xs text-on-surface-variant tracking-widest uppercase font-bold">Reproducir/Pausar Guía de Voz</p>
-</div>
-</section>
-</main>
-<!-- BottomNavBar -->
-<nav aria-label="Navegación entre misterios" class="fixed bottom-0 w-full h-24 z-50 bg-primary flex justify-around items-center px-6 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.3)]" role="navigation">
-<button aria-label="Ir al anterior misterio o cuenta" class="flex flex-col items-center justify-center text-secondary px-8 py-3 rounded-xl hover:bg-white/10 transition-all">
-<span aria-hidden="true" class="material-symbols-outlined mb-1" style="font-variation-settings: 'wght' 800;">arrow_back_ios</span>
-<span class="font-label text-xs font-bold tracking-[0.2em]">ANTERIOR</span>
-</button>
-<div class="h-10 w-px bg-secondary/30"></div>
-<button aria-label="Ir al siguiente misterio o cuenta" class="flex flex-col items-center justify-center bg-secondary/20 border border-secondary/50 rounded-xl px-8 py-3 text-secondary hover:bg-secondary/30 transition-all">
-<span aria-hidden="true" class="material-symbols-outlined mb-1" style="font-variation-settings: 'wght' 800;">arrow_forward_ios</span>
-<span class="font-label text-xs font-bold tracking-[0.2em]">SIGUIENTE</span>
-</button>
-</nav>
+          </button>
+        </header>
+
+        <main class="flex-1 flex flex-col justify-between gap-6">
+          <section aria-label="Texto de la oración" class="flex-1 flex flex-col justify-center bg-white rounded-3xl p-8 shadow-2xl border border-white/20 my-auto max-h-[60vh] overflow-y-auto">
+            <p class="font-body text-base md:text-lg text-on-background/80 leading-relaxed text-justify">
+              <span class="block text-center font-sacred text-2xl md:text-3xl text-primary font-bold mb-4">Meditación</span>
+              Cargando reflexiones sagradas...
+            </p>
+          </section>
+
+          <section aria-label="Controles de audio" class="bg-white/10 backdrop-blur-md rounded-2xl p-4 flex flex-col gap-4 border border-white/10">
+            <div class="flex items-center justify-between px-2">
+              <span class="text-xs text-white/60 font-medium">Audio Guía</span>
+              <span id="txt-progreso-misterio" class="text-xs text-secondary font-bold">Misterio 1 de 5</span>
+            </div>
+            
+            <div class="flex items-center justify-center gap-6">
+              <button id="btn-retceder" class="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white active:scale-90 transition-all">
+                <span class="material-symbols-outlined text-2xl">replay_10</span>
+              </button>
+              
+              <button id="btn-master-play" class="w-16 h-16 flex items-center justify-center rounded-full bg-secondary text-primary shadow-lg shadow-secondary/20 hover:scale-105 active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-4xl fill-1">play_arrow</span>
+              </button>
+              
+              <button id="btn-adelantar" class="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white active:scale-90 transition-all">
+                <span class="material-symbols-outlined text-2xl">forward_10</span>
+              </button>
+            </div>
+          </section>
+
+          <nav class="flex items-center justify-between bg-primary-container/40 rounded-xl p-2 border border-white/5">
+            <button id="btn-nav-anterior" class="flex items-center gap-2 px-4 py-3 rounded-xl text-white/80 hover:text-white active:scale-95 transition-all text-sm font-semibold">
+              <span class="material-symbols-outlined text-sm">arrow_back_ios</span> ANTERIOR
+            </button>
+            <div class="flex gap-1.5 items-center">
+              <div class="w-2 h-2 rounded-full bg-secondary"></div>
+              <div class="w-1.5 h-1.5 rounded-full bg-white/30"></div>
+              <div class="w-1.5 h-1.5 rounded-full bg-white/30"></div>
+              <div class="w-1.5 h-1.5 rounded-full bg-white/30"></div>
+              <div class="w-1.5 h-1.5 rounded-full bg-white/30"></div>
+            </div>
+            <button id="btn-nav-siguiente" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-secondary text-primary font-bold shadow-lg active:scale-95 transition-all text-sm">
+              SIGUIENTE <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+            </button>
+          </nav>
+        </main>
+      </div>
+    </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. Sincronización del almacenamiento local
+        // 1. Obtener misterio seleccionado del Home
         const tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || 'Gozosos';
         let listaMisterios = [];
         let indiceActual = 0;
 
-        // Corregir el botón de ajustes superior para que vaya a misterios.html
-        const btnAjustes = document.querySelector('button') && Array.from(document.querySelectorAll('button')).find(el => el.innerText.includes('AJUSTES'));
+        // Elementos interactivos del HTML
+        const cabeceraMisterio = document.querySelector('.font-sacred.text-secondary'); 
+        const cuadroTextoCentral = document.querySelector('section[aria-label="Texto de la oración"] p'); 
+        const bgDinamico = document.getElementById('dynamic-bg');
+        const audioMotor = document.getElementById('audio-rosario');
+        const txtProgreso = document.getElementById('txt-progreso-misterio');
+
+        // Botones multimedia y de navegación
+        const btnPlayPausa = document.getElementById('btn-master-play');
+        const iconoPlayPausa = btnPlayPausa ? btnPlayPausa.querySelector('.material-symbols-outlined') : null;
+        const btnAjustes = document.getElementById('btn-ajustes-manual');
+        const btnAnterior = document.getElementById('btn-nav-anterior');
+        const btnSiguiente = document.getElementById('btn-nav-siguiente');
+        const btnRet = document.getElementById('btn-retceder');
+        const btnAde = document.getElementById('btn-adelantar');
+
+        // Redirección de Ajustes manuales
         if (btnAjustes) {
             btnAjustes.addEventListener('click', (e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 window.location.href = 'misterios.html';
             });
         }
 
-        // 2. Selectores de Interfaz basados en Stitch
-        const tituloSuperior = document.querySelector('h2.font-headline') || document.querySelector('h2'); 
-        const cabeceraMisterio = document.querySelector('p.font-sacred.text-secondary') || document.querySelector('.tracking-widest'); 
-        const cuadroTextoCentral = document.querySelector('section[aria-label="Texto de la oración"] p') || document.querySelector('.font-body'); 
-
-        // Capturar el elemento de audio físico que agregamos en el HTML
-        const audioMotor = document.getElementById('audio-rosario');
-
-        // Capturar el botón de reproducción multimedia central de Stitch
-        const btnPlayPausa = document.querySelector('button[aria-label*="oración"]') || document.querySelector('.bg-secondary.rounded-full') || document.querySelector('main button'); 
-        const iconoPlayPausa = btnPlayPausa ? btnPlayPausa.querySelector('.material-symbols-outlined') : null;
-
-        // 4. Carga de tu archivo rosario.json
+        // 2. Leer archivo JSON nativo
         fetch('rosario.json')
             .then(response => {
-                if (!response.ok) throw new Error("No se pudo leer rosario.json");
+                if (!response.ok) throw new Error("Error cargando el archivo");
                 return response.json();
             })
             .then(data => {
@@ -193,56 +169,67 @@
                 listaMisterios = data.filter(item => item["Tipo de Misterio"] && item["Tipo de Misterio"].includes(termino));
 
                 if (listaMisterios.length > 0) {
-                    cargarMisterioContenido(0); // Inicia en el misterio 1
+                    cargarContenidoMisterio(0);
+                } else {
+                    if (cuadroTextoCentral) cuadroTextoCentral.textContent = `No se encontraron misterios tipo ${tipoMisterioActual}`;
                 }
             })
             .catch(err => {
-                console.error("Error:", err);
-                if (cuadroTextoCentral) cuadroTextoCentral.textContent = "Error al conectar con rosario.json";
+                console.error(err);
+                if (cuadroTextoCentral) cuadroTextoCentral.textContent = "Error al enlazar con rosario.json";
             });
 
-        // 5. Inyección de datos en la pantalla
-        function cargarMisterioContenido(indice) {
+        // 3. Función de actualización de interfaz
+        function cargarContenidoMisterio(indice) {
             if (indice < 0 || indice >= listaMisterios.length) return;
             indiceActual = indice;
             const misterio = listaMisterios[indiceActual];
 
-            // Cambiar textos de la parte superior
-            if (tituloSuperior) tituloSuperior.textContent = misterio["Título del Misterio"];
+            // Inyectar textos dinámicos organizados
             if (cabeceraMisterio) {
                 cabeceraMisterio.textContent = `MISTERIO ${misterio["Número de Misterio"] || (indiceActual + 1)} — ${tipoMisterioActual.toUpperCase()}`;
             }
-
-            // Cambiar la meditación del recuadro blanco central
             if (cuadroTextoCentral) {
-                cuadroTextoCentral.innerHTML = `<span class="block text-center font-sacred text-2xl md:text-3xl text-primary font-bold mb-4">Meditación</span>${misterio["Texto de Meditación"]}`;
+                cuadroTextoCentral.innerHTML = `<span class="block text-center font-sacred text-xl md:text-2xl text-primary font-bold mb-3">${misterio["Título del Misterio"]}</span><span class="block text-xs text-center text-secondary font-bold tracking-widest uppercase mb-4">Meditación</span>${misterio["Texto de Meditación"]}`;
+            }
+            if (txtProgreso) {
+                txtProgreso.textContent = `Misterio ${indiceActual + 1} de 5`;
             }
 
-            // Aplicar tus fondos de pantalla directos si existen
-            const bgDinamico = document.querySelector('.bg-cover') || document.body;
+            // Cambiar fondo de pantalla
             if (bgDinamico && misterio["Enlace de Imagen"]) {
                 bgDinamico.style.backgroundImage = `url('${misterio["Enlace de Imagen"]}')`;
             }
 
-            // Cargar el audio nativo directo de tu JSON
+            // Cargar pista de audio directo
             if (audioMotor && misterio["Enlace de Audio"]) {
                 audioMotor.src = misterio["Enlace de Audio"];
                 audioMotor.load();
                 
-                // Si el icono está en modo pausa, reproducir el siguiente automáticamente de forma fluida
+                // Si ya venía reproduciendo, mantener el flujo al pasar de pantalla
                 if (iconoPlayPausa && iconoPlayPausa.textContent === 'pause') {
-                    audioMotor.play().catch(e => console.log("Esperando interacción del usuario"));
+                    audioMotor.play().catch(e => console.log("Audio en pausa"));
                 }
             }
 
-            // Sincronizar el marcador de progreso ("Misterio X de 5")
-            const contadorTexto = document.querySelector('[aria-live="polite"]') || Array.from(document.querySelectorAll('p')).find(el => el.innerText.includes('Misterio'));
-            if (contadorTexto) {
-                contadorTexto.textContent = `Misterio ${indiceActual + 1} de 5`;
-            }
+            actualizarCuentasFlujo(indiceActual);
         }
 
-        // 6. Lógica de Control de Audio (Play / Pausa sin alertas molestas)
+        // Pintar indicadores esféricos inferiores
+        function actualizarCuentasFlujo(misterioIdx) {
+            const esferas = document.querySelectorAll('nav div div');
+            esferas.forEach((esfera, idx) => {
+                if (idx === misterioIdx) {
+                    esfera.className = "w-2.5 h-2.5 rounded-full bg-secondary transition-all transform scale-125 shadow-lg shadow-secondary/50";
+                } else if (idx < misterioIdx) {
+                    esfera.className = "w-2 h-2 rounded-full bg-primary opacity-40 transition-all";
+                } else {
+                    esfera.className = "w-2 h-2 rounded-full bg-white/30 transition-all";
+                }
+            });
+        }
+
+        // 4. Lógica Multimedia (Play / Pausa Real)
         if (btnPlayPausa && audioMotor) {
             btnPlayPausa.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -251,9 +238,7 @@
                         .then(() => {
                             if (iconoPlayPausa) iconoPlayPausa.textContent = 'pause';
                         })
-                        .catch(err => {
-                            console.error("Error de reproducción:", err);
-                        });
+                        .catch(err => console.error("Error al reproducir audio:", err));
                 } else {
                     audioMotor.pause();
                     if (iconoPlayPausa) iconoPlayPausa.textContent = 'play_arrow';
@@ -261,43 +246,34 @@
             });
         }
 
-        // Saltar 10 segundos con los controles laterales de Stitch
-        const btnRetroceder = document.querySelector('button[aria-label*="Retroceder"]');
-        const btnAdelantar = document.querySelector('button[aria-label*="Adelantar"]');
+        // Controles de salto de 10 segundos
+        if (btnRet) btnRet.addEventListener('click', () => { audioMotor.currentTime = Math.max(0, audioMotor.currentTime - 10); });
+        if (btnAde) btnAde.addEventListener('click', () => { audioMotor.currentTime = Math.min(audioMotor.duration || 0, audioMotor.currentTime + 10); });
 
-        if (audioMotor) {
-            if (btnRetroceder) {
-                btnRetroceder.addEventListener('click', () => { audioMotor.currentTime = Math.max(0, audioMotor.currentTime - 10); });
-            }
-            if (btnAdelantar) {
-                btnAdelantar.addEventListener('click', () => { audioMotor.currentTime = Math.min(audioMotor.duration || 0, audioMotor.currentTime + 10); });
-            }
-        }
-
-        // 7. Navegación Inferior (Botones Anterior / Siguiente de la barra azul)
-        const botonesNavegacion = document.querySelectorAll('nav button');
-        botonesNavegacion.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        // 5. Botones de Navegación Inferior
+        if (btnSiguiente) {
+            btnSiguiente.addEventListener('click', (e) => {
                 e.preventDefault();
-                const textoBtn = btn.innerText ? btn.innerText.toUpperCase() : '';
-                const esSiguiente = textoBtn.includes('SIGUIENTE') || btn.querySelector('span[aria-label*="Siguiente"]');
-                
-                if (esSiguiente) {
-                    if (indiceActual < listaMisterios.length - 1) {
-                        cargarMisterioContenido(indiceActual + 1);
-                    } else {
-                        alert("¡Has terminado las meditaciones del día! Dios te bendiga.");
-                        window.location.href = 'index.html';
-                    }
-                } else { // Botón Anterior
-                    if (indiceActual > 0) {
-                        cargarMisterioContenido(indiceActual - 1);
-                    } else {
-                        window.location.href = 'index.html';
-                    }
+                if (indiceActual < listaMisterios.length - 1) {
+                    cargarContenidoMisterio(indiceActual + 1);
+                } else {
+                    alert("¡Has terminado las meditaciones del día! Dios te bendiga.");
+                    window.location.href = 'index.html';
                 }
             });
-        });
+        }
+
+        if (btnAnterior) {
+            btnAnterior.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (indiceActual > 0) {
+                    cargarContenidoMisterio(indiceActual - 1);
+                } else {
+                    window.location.href = 'index.html';
+                }
+            });
+        }
     });
-</script>      
-</body></html>
+</script>
+</body>
+</html>
