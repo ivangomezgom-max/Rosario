@@ -35,30 +35,27 @@
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24; }
         body { min-height: 100dvh; font-family: 'Open Sans', sans-serif; }
         #dynamic-bg { transition: background-image 0.8s ease-in-out; }
-        .text-shadow-sm { text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+        .text-shadow-sm { text-shadow: 0 2px 10px rgba(0,0,0,0.6); }
         .custom-scroll-container { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
         
-        /* Solución Maestra para Efecto Translúcido (Glassmorphism) en Safari iOS */
+        /* Efecto Cristal Esmerilado de Alta Transparencia para Máxima Visibilidad del Fondo */
         .safari-glass {
-            background-color: rgba(255, 255, 255, 0.70) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
-            backdrop-filter: blur(12px) saturate(180%) !important;
+            background-color: rgba(255, 255, 255, 0.35) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(190%) !important;
+            backdrop-filter: blur(16px) saturate(190%) !important;
         }
         .safari-glass-dark {
-            background-color: rgba(30, 58, 95, 0.40) !important;
-            -webkit-backdrop-filter: blur(8px) !important;
-            backdrop-filter: blur(8px) !important;
+            background-color: rgba(30, 58, 95, 0.30) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            backdrop-filter: blur(10px) !important;
         }
     </style>
 </head>
 <body class="bg-surface text-on-surface flex flex-col relative min-h-screen overflow-x-hidden">
 
-<!-- Capas de Fondo Dinámico Inmersivo -->
 <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-2] bg-cover bg-center bg-no-repeat transition-all duration-700" id="dynamic-bg"></div>
-<!-- Filtro oscuro balanceado para no opacar la imagen trasera -->
-<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-1] bg-primary/35 backdrop-brightness-95" id="bg-overlay"></div>
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-1] bg-primary/25 backdrop-brightness-90" id="bg-overlay"></div>
 
-<!-- TopAppBar -->
 <header class="fixed top-0 w-full z-50 bg-primary/90 backdrop-blur-md shadow-lg border-b border-secondary/20 flex justify-between items-center px-6 py-4" role="banner">
     <div class="flex items-center gap-3">
         <span aria-hidden="true" class="material-symbols-outlined text-secondary text-2xl">menu_book</span>
@@ -69,11 +66,9 @@
     </button>
 </header>
 
-<!-- CONTENEDOR PRINCIPAL -->
 <main class="flex-1 flex flex-col pt-20 pb-28 overflow-y-auto custom-scroll-container z-10 w-full px-4 items-center justify-start">
 
-    <!-- SECCIÓN 1: PANTALLA DE INICIO -->
-    <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-10 my-auto relative py-4">
+    <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-12 my-auto relative py-4">
         
         <section class="w-full text-center z-10">
             <div class="flex flex-col items-center space-y-2">
@@ -90,7 +85,7 @@
                 <div class="absolute -inset-2 bg-secondary/10 rounded-xl blur-xl transition-all duration-500"></div>
                 <button id="btn-comenzar-rosario" class="relative w-full safari-glass rounded-xl shadow-2xl flex flex-col items-center justify-center p-6 border border-white/40 overflow-hidden active:scale-95 transition-transform">
                     <span class="font-body text-primary text-[10px] tracking-[0.3em] mb-2 uppercase font-extrabold">COMENZAR LA ORACIÓN</span>
-                    <span class="font-display text-xl text-primary text-center leading-tight">
+                    <span class="font-display text-xl text-primary text-center leading-tight font-semibold">
                         Rezar los Misterios de Hoy
                         <span id="texto-misterio-hoy" class="block mt-1 text-secondary font-display text-sm italic font-medium">
                             ...
@@ -106,37 +101,33 @@
         </section>
     </div>
 
-    <!-- SECCIÓN 2: PANTALLA DE ORACIÓN -->
     <div id="pantalla-oracion" class="hidden w-full max-w-xl flex flex-col space-y-4 py-2 my-auto">
         
-        <!-- Tarjeta Flotante Translúcida Corregida para iOS -->
-        <div class="safari-glass rounded-2xl p-6 shadow-2xl border border-white/50 flex flex-col space-y-5 transition-all duration-300">
+        <div class="safari-glass rounded-2xl p-6 shadow-2xl border border-white/40 flex flex-col space-y-5 transition-all duration-300">
             
-            <div class="flex justify-between items-center border-b border-primary/10 pb-3">
+            <div class="flex justify-between items-center border-b border-primary/20 pb-3">
                 <span id="txt-contador-pasos" class="text-primary font-body text-xs font-bold tracking-wider uppercase">MISTERIO 1 DE 5</span>
-                <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" id="tag-tipo-misterio">MEDITACIÓN</span>
+                <span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" id="tag-tipo-misterio">MEDITACIÓN</span>
             </div>
             
             <h3 id="txt-titulo-misterio" class="font-display text-2xl text-primary font-bold text-center leading-tight">Cargando Misterio...</h3>
             
-            <!-- Texto de la meditación -->
             <div class="max-h-60 overflow-y-auto pr-1 custom-scroll-container">
-                <p id="txt-meditacion-misterio" class="font-body text-on-surface text-base md:text-lg leading-relaxed text-justify whitespace-pre-line font-medium">
+                <p id="txt-meditacion-misterio" class="font-body text-on-surface text-base md:text-lg leading-relaxed text-justify whitespace-pre-line font-semibold bg-white/20 p-2 rounded-xl">
                     Cargando la meditación correspondiente...
                 </p>
             </div>
 
-            <!-- Contenedor del Audio Guía -->
-            <div class="bg-primary/5 rounded-xl p-4 flex flex-col items-center justify-center space-y-3 border border-primary/10">
-                <span class="text-[10px] font-bold tracking-widest text-primary/70 uppercase">Audio Guía</span>
+            <div class="bg-primary/10 rounded-xl p-4 flex flex-col items-center justify-center space-y-3 border border-primary/10">
+                <span class="text-[10px] font-bold tracking-widest text-primary/80 uppercase">Audio Guía</span>
                 <div class="flex items-center space-x-8">
-                    <button id="audio-btn-rewind" class="text-primary/70 hover:text-secondary active:scale-90 transition-transform">
+                    <button id="audio-btn-rewind" class="text-primary/80 hover:text-secondary active:scale-90 transition-transform">
                         <span class="material-symbols-outlined text-2xl">replay_10</span>
                     </button>
                     <button id="audio-btn-play" class="w-14 h-14 bg-secondary text-primary rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform">
                         <span id="audio-icon" class="material-symbols-outlined text-3xl font-bold">play_arrow</span>
                     </button>
-                    <button id="audio-btn-forward" class="text-primary/70 hover:text-secondary active:scale-90 transition-transform">
+                    <button id="audio-btn-forward" class="text-primary/80 hover:text-secondary active:scale-90 transition-transform">
                         <span class="material-symbols-outlined text-2xl">forward_10</span>
                     </button>
                 </div>
@@ -144,22 +135,20 @@
         </div>
     </div>
 
-    <!-- SECCIÓN 3: PANTALLA DE SELECCIÓN MANUAL -->
     <div id="pantalla-ajustes" class="hidden w-full max-w-md flex flex-col py-4 my-auto">
         <div class="safari-glass rounded-2xl p-6 shadow-2xl border border-white/40 text-center">
             <h3 class="font-display text-2xl text-primary font-bold mb-6 uppercase tracking-wider">Seleccionar Misterios</h3>
             <div class="flex flex-col space-y-3.5" id="lista-seleccion-misterios">
-                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/60 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Gozosos')">Misterios Gozosos (Lunes y Sábado)</button>
-                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/60 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Dolorosos')">Misterios Dolorosos (Martes y Viernes)</button>
-                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/60 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Gloriosos')">Misterios Gloriosos (Miércoles y Domingo)</button>
-                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/60 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Luminosos')">Misterios Luminosos (Jueves)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/40 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Gozosos')">Misterios Gozosos (Lunes y Sábado)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/40 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Dolorosos')">Misterios Dolorosos (Martes y Viernes)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/40 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Gloriosos')">Misterios Gloriosos (Miércoles y Domingo)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/40 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Luminosos')">Misterios Luminosos (Jueves)</button>
             </div>
         </div>
     </div>
 
 </main>
 
-<!-- BottomNavBar -->
 <nav class="fixed bottom-0 w-full h-24 z-50 bg-primary/95 backdrop-blur-md flex justify-around items-center px-6 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.5)] border-t border-white/10" role="navigation">
     <button id="btn-nav-anterior" class="flex flex-col items-center justify-center text-on-primary/40 px-6 py-2 transition-all rounded-lg cursor-not-allowed" disabled>
         <span aria-hidden="true" class="material-symbols-outlined mb-1 text-2xl">arrow_back_ios</span>
@@ -202,8 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let tipoMisterioActual = '';
     let hoy = '';
 
-    // URL base de la hermosa imagen representativa fijada para el Home
-    const fondoHomeSoli = 'https://images.unsplash.com/photo-1544427928-c49cddeb8d92?q=80&w=1974&auto=format&fit=crop';
+    // CORRECCIÓN: Apuntando a tu repositorio de GitHub de forma nativa local
+    const fondoHomeSoli = 'imagenes/home.jpg';
 
     function calcularMisterioPorDia() {
         hoy = diasSemana[new Date().getDay()];
@@ -308,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.cambiarMisterioManual = function(tipo) {
         tipoMisterioActual = tipo;
-        localStorage.setItem('misterioSelected', tipo);
+        localStorage.setItem('misterioSeleccionado', tipo);
         refrescarEtiquetaInicio();
         indiceActual = 0;
         cargarDatosRosario();
