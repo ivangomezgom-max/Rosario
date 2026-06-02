@@ -56,37 +56,40 @@
 
 <main class="flex-1 flex flex-col pt-20 pb-28 overflow-y-auto custom-scroll-container z-10 w-full px-4 items-center">
 
-    <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-8 my-auto relative py-4">
+    <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-6 my-auto relative py-4">
         <div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center">
             <span aria-hidden="true" class="material-symbols-outlined text-[24rem] text-white">church</span>
         </div>
         
         <section class="w-full text-center z-10">
-            <div class="flex flex-col items-center space-y-2">
+            <div class="flex flex-col items-center space-y-1">
                 <div class="inline-block px-6 py-1.5 bg-secondary/20 backdrop-blur-md rounded-full border border-secondary/40 mb-2">
                     <span class="font-body text-[10px] uppercase tracking-[0.25rem] text-secondary font-bold">Presencia Sagrada</span>
                 </div>
-                <h2 id="reloj-digital" class="font-display text-6xl font-medium text-white text-shadow-sm tracking-tight">--:--</h2>
-                <div class="h-[2px] w-16 bg-secondary my-2"></div>
-                <p id="fecha-actual" class="font-display text-xl text-white italic">Cargando fecha...</p>
+                <h2 id="reloj-digital" class="font-display text-5xl font-medium text-white text-shadow-sm tracking-tight">--:--</h2>
+                <p id="fecha-actual" class="font-display text-lg text-white/90 italic">Cargando fecha...</p>
             </div>
         </section>
+
+        <div class="w-full max-w-[280px] z-10 shadow-2xl rounded-2xl overflow-hidden border-2 border-secondary/40">
+            <img src="imagenes/home.jpg" alt="Santo Rosario Devoción" class="w-full h-48 object-cover object-center bg-primary/30">
+        </div>
 
         <section class="w-full z-10">
             <div class="relative group">
                 <div class="absolute -inset-2 bg-secondary/20 rounded-xl blur-xl transition-all duration-500"></div>
-                <button id="btn-comenzar-rosario" class="relative w-full bg-white rounded-xl shadow-2xl flex flex-col items-center justify-center p-6 border-2 border-secondary overflow-hidden active:scale-95 transition-transform">
-                    <span class="font-body text-primary text-[10px] tracking-[0.3em] mb-3 uppercase font-extrabold">COMENZAR LA ORACIÓN</span>
-                    <span class="font-display text-xl md:text-2xl text-primary text-center leading-tight">
+                <button id="btn-comenzar-rosario" class="relative w-full bg-white rounded-xl shadow-2xl flex flex-col items-center justify-center p-5 border-2 border-secondary overflow-hidden active:scale-95 transition-transform">
+                    <span class="font-body text-primary text-[10px] tracking-[0.3em] mb-2 uppercase font-extrabold">COMENZAR LA ORACIÓN</span>
+                    <span class="font-display text-xl text-primary text-center leading-tight">
                         Rezar los Misterios de Hoy
-                        <span id="texto-misterio-hoy" class="block mt-2 text-secondary font-display text-base italic font-medium">
+                        <span id="texto-misterio-hoy" class="block mt-1 text-secondary font-display text-sm italic font-medium">
                             ...
                         </span>
                     </span>
                 </button>
             </div>
-            <blockquote class="mt-8 text-center">
-                <p class="font-prayer-quote text-secondary font-medium italic text-lg max-w-xs mx-auto leading-snug drop-shadow-sm">
+            <blockquote class="mt-4 text-center">
+                <p class="font-prayer-quote text-secondary font-medium italic text-base max-w-xs mx-auto leading-snug drop-shadow-sm">
                     "Donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos."
                 </p>
             </blockquote>
@@ -94,29 +97,33 @@
     </div>
 
     <div id="pantalla-oracion" class="hidden w-full max-w-xl flex flex-col space-y-4 py-2">
-        <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-secondary/30 flex flex-col space-y-5">
-            <div class="flex justify-between items-center border-b border-secondary/20 pb-3">
+        <div class="bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-2xl border border-secondary/30 flex flex-col space-y-4">
+            <div class="flex justify-between items-center border-b border-secondary/20 pb-2">
                 <span id="txt-contador-pasos" class="text-secondary font-body text-xs font-bold tracking-wider uppercase">MISTERIO 1 DE 5</span>
                 <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" id="tag-tipo-misterio">MEDITACIÓN</span>
             </div>
             
-            <h3 id="txt-titulo-misterio" class="font-display text-2xl md:text-3xl text-primary font-bold text-center leading-tight">Cargando Misterio...</h3>
+            <h3 id="txt-titulo-misterio" class="font-display text-xl md:text-2xl text-primary font-bold text-center leading-tight">Cargando Misterio...</h3>
             
-            <p id="txt-meditacion-misterio" class="font-body text-on-surface text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
+            <div class="w-full h-44 md:h-52 rounded-xl overflow-hidden border border-secondary/30 shadow-md">
+                <img id="img-misterio" src="" alt="Ilustración del Misterio" class="w-full h-full object-cover object-center bg-surface-container">
+            </div>
+
+            <p id="txt-meditacion-misterio" class="font-body text-on-surface text-sm md:text-base leading-relaxed text-justify whitespace-pre-line">
                 Cargando la meditación correspondiente...
             </p>
 
-            <div class="bg-surface-container rounded-xl p-4 flex flex-col items-center justify-center space-y-3 border border-outline/10 mt-2">
-                <span class="text-[11px] font-bold tracking-widest text-primary/60 uppercase">Audio Guía</span>
+            <div class="bg-surface-container rounded-xl p-3 flex flex-col items-center justify-center space-y-2 border border-outline/10 mt-1">
+                <span class="text-[10px] font-bold tracking-widest text-primary/60 uppercase">Audio Guía</span>
                 <div class="flex items-center space-x-6">
                     <button id="audio-btn-rewind" class="text-primary/70 hover:text-secondary active:scale-90 transition-transform">
-                        <span class="material-symbols-outlined text-3xl">replay_10</span>
+                        <span class="material-symbols-outlined text-2xl">replay_10</span>
                     </button>
-                    <button id="audio-btn-play" class="w-16 h-16 bg-secondary text-primary rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform">
-                        <span id="audio-icon" class="material-symbols-outlined text-4xl font-bold">play_arrow</span>
+                    <button id="audio-btn-play" class="w-14 h-14 bg-secondary text-primary rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+                        <span id="audio-icon" class="material-symbols-outlined text-3xl font-bold">play_arrow</span>
                     </button>
                     <button id="audio-btn-forward" class="text-primary/70 hover:text-secondary active:scale-90 transition-transform">
-                        <span class="material-symbols-outlined text-3xl">forward_10</span>
+                        <span class="material-symbols-outlined text-2xl">forward_10</span>
                     </button>
                 </div>
             </div>
@@ -170,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const iconPlay = document.getElementById('audio-icon');
     const btnRewind = document.getElementById('audio-btn-rewind');
     const btnForward = document.getElementById('audio-btn-forward');
+    const imgMisterio = document.getElementById('img-misterio');
 
     let listaMisterios = [];
     let indiceActual = 0;
@@ -185,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (hoy === 'Miércoles' || hoy === 'Domingo') misterioAsignado = 'Gloriosos';
         else if (hoy === 'Jueves') misterioAsignado = 'Luminosos';
 
-        // Si hay una selección manual en memoria usarla, si no, usar la del día
         tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || misterioAsignado;
     }
     calcularMisterioPorDia();
@@ -199,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
         contenedorPrincipal.scrollTop = 0;
 
         if (nuevaVista === 'inicio') {
-            // Limpiar memoria al volver al inicio de forma manual o al refrescar para evitar el "efecto pegado" permanente
             localStorage.removeItem('misterioSeleccionado');
             calcularMisterioPorDia();
             refrescarEtiquetaInicio();
@@ -238,16 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     refrescarEtiquetaInicio();
 
-    const actualizarReloj = () => {
-        const d = new Date();
-        let h = d.getHours();
-        const m = String(d.getMinutes()).padStart(2, '0');
-        const ampm = h >= 12 ? 'PM' : 'AM';
-        h = h % 12 || 12;
-        document.getElementById('reloj-digital').innerHTML = `${h}:${m} <span class="text-2xl align-middle opacity-80">${ampm}</span>`;
-    };
-    actualizarReloj(); setInterval(actualizarReloj, 60000);
-
     window.cargarDatosRosario = function() {
         fetch('rosario.json')
           .then(res => res.json())
@@ -270,6 +266,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('txt-titulo-misterio').textContent = item["Título del Misterio"];
         document.getElementById('txt-meditacion-misterio').textContent = item["Texto de Meditación"];
         document.getElementById('tag-tipo-misterio').textContent = item["Tipo de Misterio"] || 'MEDITACIÓN';
+
+        // Inyección dinámica de la imagen correspondiente desde el JSON
+        if (item["Enlace de Imagen"]) {
+            imgMisterio.src = item["Enlace de Imagen"];
+            imgMisterio.style.display = "block";
+        } else {
+            imgMisterio.style.display = "none";
+        }
 
         audioMotor.pause();
         iconPlay.textContent = 'play_arrow';
@@ -332,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(() => { iconPlay.textContent = 'pause'; })
                 .catch((error) => {
                     console.error("Error de reproducción:", error);
-                    alert("El navegador bloqueó o no pudo cargar el archivo de audio. Verifica que el interruptor de silencio de tu móvil esté desactivado o que el link de Google Drive no tenga restricciones.");
                     iconPlay.textContent = 'play_arrow';
                 });
         } else {
@@ -343,6 +346,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnRewind.addEventListener('click', () => { audioMotor.currentTime = Math.max(0, audioMotor.currentTime - 10); });
     btnForward.addEventListener('click', () => { audioMotor.currentTime = Math.min(audioMotor.duration || 0, audioMotor.currentTime + 10); });
+
+    const actualizarReloj = () => {
+        const d = new Date();
+        let h = d.getHours();
+        const m = String(d.getMinutes()).padStart(2, '0');
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        document.getElementById('reloj-digital').innerHTML = `${h}:${m} <span class="text-xl align-middle opacity-80">${ampm}</span>`;
+    };
+    actualizarReloj(); setInterval(actualizarReloj, 60000);
 });
 </script>
 </body>
