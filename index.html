@@ -3,6 +3,13 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    
+    <!-- CONFIGURACIÓN DE ICONOS PARA ACCESO DIRECTO EN MÓVILES (Elimina la letra "I") -->
+    <link rel="icon" type="image/png" sizes="192x192" href="imagenes/logo.png"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="imagenes/logo.png"/>
+    <meta name="apple-mobile-web-app-title" content="Santo Rosario"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
@@ -53,9 +60,12 @@
 </head>
 <body class="bg-surface text-on-surface flex flex-col relative min-h-screen overflow-x-hidden">
 
+<!-- Capas de Fondo Dinámico Inmersivo -->
 <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-2] bg-cover bg-center bg-no-repeat transition-all duration-700" id="dynamic-bg"></div>
+<!-- Filtro oscuro balanceado para realzar textos superiores sin bloquear la imagen de fondo -->
 <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-1] bg-primary/25 backdrop-brightness-90" id="bg-overlay"></div>
 
+<!-- TopAppBar -->
 <header class="fixed top-0 w-full z-50 bg-primary/90 backdrop-blur-md shadow-lg border-b border-secondary/20 flex justify-between items-center px-6 py-4" role="banner">
     <div class="flex items-center gap-3">
         <span aria-hidden="true" class="material-symbols-outlined text-secondary text-2xl">menu_book</span>
@@ -66,8 +76,10 @@
     </button>
 </header>
 
+<!-- CONTENEDOR PRINCIPAL -->
 <main class="flex-1 flex flex-col pt-20 pb-28 overflow-y-auto custom-scroll-container z-10 w-full px-4 items-center justify-start">
 
+    <!-- SECCIÓN 1: PANTALLA DE INICIO -->
     <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-12 my-auto relative py-4">
         
         <section class="w-full text-center z-10">
@@ -101,8 +113,10 @@
         </section>
     </div>
 
+    <!-- SECCIÓN 2: PANTALLA DE ORACIÓN (Transparencia Optimizada) -->
     <div id="pantalla-oracion" class="hidden w-full max-w-xl flex flex-col space-y-4 py-2 my-auto">
         
+        <!-- Tarjeta Flotante con efecto Cristal Translúcido Avanzado al 35% de Opacidad -->
         <div class="safari-glass rounded-2xl p-6 shadow-2xl border border-white/40 flex flex-col space-y-5 transition-all duration-300">
             
             <div class="flex justify-between items-center border-b border-primary/20 pb-3">
@@ -112,12 +126,14 @@
             
             <h3 id="txt-titulo-misterio" class="font-display text-2xl text-primary font-bold text-center leading-tight">Cargando Misterio...</h3>
             
+            <!-- Texto de la meditación con fondo sutil para blindar la lectura si la imagen trasera es muy clara -->
             <div class="max-h-60 overflow-y-auto pr-1 custom-scroll-container">
                 <p id="txt-meditacion-misterio" class="font-body text-on-surface text-base md:text-lg leading-relaxed text-justify whitespace-pre-line font-semibold bg-white/20 p-2 rounded-xl">
                     Cargando la meditación correspondiente...
                 </p>
             </div>
 
+            <!-- Contenedor del Audio Guía -->
             <div class="bg-primary/10 rounded-xl p-4 flex flex-col items-center justify-center space-y-3 border border-primary/10">
                 <span class="text-[10px] font-bold tracking-widest text-primary/80 uppercase">Audio Guía</span>
                 <div class="flex items-center space-x-8">
@@ -135,6 +151,7 @@
         </div>
     </div>
 
+    <!-- SECCIÓN 3: PANTALLA DE SELECCIÓN MANUAL -->
     <div id="pantalla-ajustes" class="hidden w-full max-w-md flex flex-col py-4 my-auto">
         <div class="safari-glass rounded-2xl p-6 shadow-2xl border border-white/40 text-center">
             <h3 class="font-display text-2xl text-primary font-bold mb-6 uppercase tracking-wider">Seleccionar Misterios</h3>
@@ -149,6 +166,7 @@
 
 </main>
 
+<!-- BottomNavBar -->
 <nav class="fixed bottom-0 w-full h-24 z-50 bg-primary/95 backdrop-blur-md flex justify-around items-center px-6 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.5)] border-t border-white/10" role="navigation">
     <button id="btn-nav-anterior" class="flex flex-col items-center justify-center text-on-primary/40 px-6 py-2 transition-all rounded-lg cursor-not-allowed" disabled>
         <span aria-hidden="true" class="material-symbols-outlined mb-1 text-2xl">arrow_back_ios</span>
@@ -191,7 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let tipoMisterioActual = '';
     let hoy = '';
 
-    // CORRECCIÓN: Apuntando a tu repositorio de GitHub de forma nativa local
     const fondoHomeSoli = 'imagenes/home.jpg';
 
     function calcularMisterioPorDia() {
@@ -242,7 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Inicialización del fondo del Home
     capaFondo.style.backgroundImage = `url('${fondoHomeSoli}')`;
 
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
