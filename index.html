@@ -79,14 +79,12 @@
 <!-- CONTENEDOR PRINCIPAL -->
 <main class="flex-1 flex flex-col pt-20 pb-28 overflow-y-auto custom-scroll-container z-10 w-full px-4 items-center justify-start">
 
-    <!-- SECCIÓN 1: PANTALLA DE INICIO -->
+    <!-- SECCIÓN 1: PANTALLA DE INICIO (Enfoque Minimalista Ajustado) -->
     <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-12 my-auto relative py-4">
         
         <section class="w-full text-center z-10">
             <div class="flex flex-col items-center space-y-2">
-                <div class="inline-block px-6 py-1.5 safari-glass-dark rounded-full border border-white/10 mb-2">
-                    <span class="font-body text-[10px] uppercase tracking-[0.25rem] text-secondary font-bold">Presencia Sagrada</span>
-                </div>
+                <!-- Se ha omitido por completo el recuadro "Presencia Sagrada" para lograr una vista más limpia -->
                 <h2 id="reloj-digital" class="font-display text-6xl font-medium text-white text-shadow-sm tracking-tight">--:--</h2>
                 <p id="fecha-actual" class="font-display text-xl text-white text-shadow-sm italic">Cargando fecha...</p>
             </div>
@@ -106,8 +104,9 @@
                 </button>
             </div>
             <blockquote class="text-center">
-                <p class="font-prayer-quote text-white font-medium italic text-lg max-w-xs mx-auto leading-snug text-shadow-sm">
-                    "Donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos."
+                <!-- El texto de este párrafo ahora cambia dinámicamente cada día de la semana -->
+                <p id="frase-biblica-dinamica" class="font-prayer-quote text-white font-medium italic text-lg max-w-xs mx-auto leading-snug text-shadow-sm transition-all duration-500">
+                    "Cargando palabra de vida..."
                 </p>
             </blockquote>
         </section>
@@ -211,6 +210,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fondoHomeSoli = 'imagenes/home.jpg';
 
+    // BANCO DE FRASES BÍBLICAS DIARIAS
+    const frasesFe = [
+        '"Donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos." — Mateo 18:20',
+        '"El Señor es mi pastor, nada me faltará. En lugares de delicados pastos me hará descansar." — Salmo 23:1-2',
+        '"No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios que te esfuerzo." — Isaías 41:10',
+        '"Todo lo puedo en Cristo que me fortalece." — Filipenses 4:13',
+        '"Pidan, y se les dará; busquen, y encontrarán; llamen, y se les abrirá." — Mateo 7:7',
+        '"La paz os dejo, mi paz os doy; yo no os la doy como el mundo la da." — Juan 14:27',
+        '"Confía en el Señor con todo tu corazón, y no te apoyes en tu propia prudencia." — Proverbios 3:5',
+        '"El amor es paciente, es servicial; el amor no es envidioso, no es jactancioso." — 1 Corintios 13:4',
+        '"Tu palabra es una lámpara a mis pies y una luz en mi camino." — Salmo 119:105',
+        '"Bienaventurados los limpios de corazón, porque ellos verán a Dios." — Mateo 5:8'
+    ];
+
+    // Función matemática basada en los días transcurridos para alternar la cita de forma nativa
+    function cambiarFraseDiaria() {
+        const hoyFecha = new Date();
+        const inicioAnio = new Date(hoyFecha.getFullYear(), 0, 0);
+        const dif = hoyFecha - inicioAnio;
+        const unDia = 1000 * 60 * 60 * 24;
+        const diaDelAnio = Math.floor(dif / unDia);
+        
+        // Selecciona un índice del arreglo usando el residuo del día del año
+        const indiceFrase = diaDelAnio % frasesFe.length;
+        document.getElementById('frase-biblica-dinamica').textContent = frasesFe[indiceFrase];
+    }
+
     function calcularMisterioPorDia() {
         hoy = diasSemana[new Date().getDay()];
         let misterioAsignado = 'Gozosos';
@@ -234,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('misterioSeleccionado');
             calcularMisterioPorDia();
             refrescarEtiquetaInicio();
+            cambiarFraseDiaria();
             cargarDatosRosario();
             
             capaFondo.style.backgroundImage = `url('${fondoHomeSoli}')`;
@@ -260,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     capaFondo.style.backgroundImage = `url('${fondoHomeSoli}')`;
+    cambiarFraseDiaria();
 
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
     let fechaTxt = new Date().toLocaleDateString('es-ES', opcionesFecha);
