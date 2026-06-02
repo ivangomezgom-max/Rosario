@@ -35,16 +35,16 @@
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24; }
         body { min-height: 100dvh; font-family: 'Open Sans', sans-serif; }
         #dynamic-bg { transition: background-image 0.8s ease-in-out; }
-        .text-shadow-sm { text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .text-shadow-sm { text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
         .custom-scroll-container { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
     </style>
 </head>
 <body class="bg-surface text-on-surface flex flex-col relative min-h-screen">
 
-<!-- Capas de Fondo Dinámico (Para el Home y los Misterios) -->
+<!-- Capas de Fondo Dinámico Inmersivo -->
 <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-2] bg-cover bg-center bg-no-repeat transition-all duration-700" id="dynamic-bg"></div>
-<!-- Filtro oscuro para garantizar el contraste de los textos superiores -->
-<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-1] bg-primary/60 backdrop-brightness-75" id="bg-overlay"></div>
+<!-- Filtro oscuro para potenciar el contraste de los textos e interfaces flotantes -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-1] bg-primary/50 backdrop-brightness-90" id="bg-overlay"></div>
 
 <!-- TopAppBar -->
 <header class="fixed top-0 w-full z-50 bg-primary/90 backdrop-blur-md shadow-lg border-b border-secondary/20 flex justify-between items-center px-6 py-4" role="banner">
@@ -60,31 +60,25 @@
 <!-- CONTENEDOR PRINCIPAL -->
 <main class="flex-1 flex flex-col pt-20 pb-28 overflow-y-auto custom-scroll-container z-10 w-full px-4 items-center justify-start">
 
-    <!-- SECCIÓN 1: PANTALLA DE INICIO -->
-    <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-6 my-auto relative py-4">
-        <div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center">
-            <span aria-hidden="true" class="material-symbols-outlined text-[24rem] text-white">church</span>
-        </div>
+    <!-- SECCIÓN 1: PANTALLA DE INICIO (Limpia y Minimalista) -->
+    <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-10 my-auto relative py-4">
         
         <section class="w-full text-center z-10">
-            <div class="flex flex-col items-center space-y-1">
-                <div class="inline-block px-6 py-1.5 bg-secondary/20 backdrop-blur-md rounded-full border border-secondary/40 mb-2">
+            <div class="flex flex-col items-center space-y-2">
+                <div class="inline-block px-6 py-1.5 bg-primary/40 backdrop-blur-md rounded-full border border-white/10 mb-2">
                     <span class="font-body text-[10px] uppercase tracking-[0.25rem] text-secondary font-bold">Presencia Sagrada</span>
                 </div>
-                <h2 id="reloj-digital" class="font-display text-5xl font-medium text-white text-shadow-sm tracking-tight">--:--</h2>
-                <p id="fecha-actual" class="font-display text-lg text-white/90 italic">Cargando fecha...</p>
+                <h2 id="reloj-digital" class="font-display text-6xl font-medium text-white text-shadow-sm tracking-tight">--:--</h2>
+                <p id="fecha-actual" class="font-display text-xl text-white text-shadow-sm italic">Cargando fecha...</p>
             </div>
         </section>
 
-        <!-- IMAGEN DEL HOME CON TAMAÑO CONTROLADO -->
-        <div class="w-full max-w-[280px] z-10 shadow-2xl rounded-2xl overflow-hidden border-2 border-secondary/40 aspect-[4/3] bg-primary/20">
-            <img src="imagenes/home.jpg" alt="Santo Rosario Devoción" class="w-full h-full object-contain object-center">
-        </div>
+        <!-- Se removió el cuadro de imagen central del Home para dejar el fondo limpio -->
 
-        <section class="w-full z-10">
+        <section class="w-full z-10 space-y-6">
             <div class="relative group">
                 <div class="absolute -inset-2 bg-secondary/20 rounded-xl blur-xl transition-all duration-500"></div>
-                <button id="btn-comenzar-rosario" class="relative w-full bg-white rounded-xl shadow-2xl flex flex-col items-center justify-center p-5 border-2 border-secondary overflow-hidden active:scale-95 transition-transform">
+                <button id="btn-comenzar-rosario" class="relative w-full bg-white/90 backdrop-blur-md rounded-xl shadow-2xl flex flex-col items-center justify-center p-6 border border-secondary/60 overflow-hidden active:scale-95 transition-transform">
                     <span class="font-body text-primary text-[10px] tracking-[0.3em] mb-2 uppercase font-extrabold">COMENZAR LA ORACIÓN</span>
                     <span class="font-display text-xl text-primary text-center leading-tight">
                         Rezar los Misterios de Hoy
@@ -94,48 +88,45 @@
                     </span>
                 </button>
             </div>
-            <blockquote class="mt-4 text-center">
-                <p class="font-prayer-quote text-secondary font-medium italic text-base max-w-xs mx-auto leading-snug drop-shadow-sm">
+            <blockquote class="text-center">
+                <p class="font-prayer-quote text-white font-medium italic text-lg max-w-xs mx-auto leading-snug text-shadow-sm">
                     "Donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos."
                 </p>
             </blockquote>
         </section>
     </div>
 
-    <!-- SECCIÓN 2: PANTALLA DE ORACIÓN (Efecto Transparencia Inmersiva) -->
+    <!-- SECCIÓN 2: PANTALLA DE ORACIÓN (Efecto Vitral Translúcido Avanzado) -->
     <div id="pantalla-oracion" class="hidden w-full max-w-xl flex flex-col space-y-4 py-2 my-auto">
         
-        <!-- Tarjeta estilo "Glassmorphism" (Efecto Vitral Translúcido) -->
-        <div class="bg-white/85 backdrop-blur-lg rounded-2xl p-5 shadow-2xl border border-white/40 flex flex-col space-y-4 transition-all duration-300">
+        <!-- Tarjeta Flotante Translúcida -->
+        <div class="bg-white/75 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/40 flex flex-col space-y-5 transition-all duration-300">
             
-            <div class="flex justify-between items-center border-b border-primary/10 pb-2">
+            <div class="flex justify-between items-center border-b border-primary/10 pb-3">
                 <span id="txt-contador-pasos" class="text-primary font-body text-xs font-bold tracking-wider uppercase">MISTERIO 1 DE 5</span>
-                <span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" id="tag-tipo-misterio">MEDITACIÓN</span>
+                <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" id="tag-tipo-misterio">MEDITACIÓN</span>
             </div>
             
-            <h3 id="txt-titulo-misterio" class="font-display text-xl md:text-2xl text-primary font-bold text-center leading-tight">Cargando Misterio...</h3>
+            <h3 id="txt-titulo-misterio" class="font-display text-2xl text-primary font-bold text-center leading-tight">Cargando Misterio...</h3>
             
-            <!-- CONTENEDOR SEGURO: La imagen se escala de forma inteligente aquí sin desbordar ni cortarse jamás -->
-            <div class="w-full h-40 md:h-48 rounded-xl overflow-hidden bg-black/5 flex items-center justify-center border border-primary/5">
-                <img id="img-misterio" src="" alt="Ilustración del Misterio" class="w-full h-full object-contain object-center">
-            </div>
+            <!-- Se eliminó por completo el recuadro de imagen central interno -->
 
-            <!-- Texto de la meditación con scroll interno sutil si es muy largo, evitando deformar el layout móvil -->
-            <div class="max-h-44 overflow-y-auto pr-1 custom-scroll-container">
-                <p id="txt-meditacion-misterio" class="font-body text-on-surface text-sm md:text-base leading-relaxed text-justify whitespace-pre-line">
+            <!-- Texto de la meditación con scroll seguro e independiente -->
+            <div class="max-h-60 overflow-y-auto pr-1 custom-scroll-container">
+                <p id="txt-meditacion-misterio" class="font-body text-on-surface text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
                     Cargando la meditación correspondiente...
                 </p>
             </div>
 
-            <!-- Contenedor del Audio Guía integrado elegantemente -->
-            <div class="bg-primary/5 rounded-xl p-3 flex flex-col items-center justify-center space-y-2 border border-primary/10 mt-1">
+            <!-- Contenedor del Audio Guía -->
+            <div class="bg-primary/5 rounded-xl p-4 flex flex-col items-center justify-center space-y-3 border border-primary/10">
                 <span class="text-[10px] font-bold tracking-widest text-primary/70 uppercase">Audio Guía</span>
-                <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-8">
                     <button id="audio-btn-rewind" class="text-primary/70 hover:text-secondary active:scale-90 transition-transform">
                         <span class="material-symbols-outlined text-2xl">replay_10</span>
                     </button>
-                    <button id="audio-btn-play" class="w-12 h-12 bg-secondary text-primary rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform">
-                        <span id="audio-icon" class="material-symbols-outlined text-2xl font-bold">play_arrow</span>
+                    <button id="audio-btn-play" class="w-14 h-14 bg-secondary text-primary rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+                        <span id="audio-icon" class="material-symbols-outlined text-3xl font-bold">play_arrow</span>
                     </button>
                     <button id="audio-btn-forward" class="text-primary/70 hover:text-secondary active:scale-90 transition-transform">
                         <span class="material-symbols-outlined text-2xl">forward_10</span>
@@ -147,13 +138,13 @@
 
     <!-- SECCIÓN 3: PANTALLA DE SELECCIÓN MANUAL -->
     <div id="pantalla-ajustes" class="hidden w-full max-w-md flex flex-col py-4 my-auto">
-        <div class="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-secondary/30 text-center">
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/40 text-center">
             <h3 class="font-display text-2xl text-primary font-bold mb-6 uppercase tracking-wider">Seleccionar Misterios</h3>
             <div class="flex flex-col space-y-3.5" id="lista-seleccion-misterios">
-                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-surface hover:bg-secondary/10 transition-colors" onclick="cambiarMisterioManual('Gozosos')">Misterios Gozosos (Lunes y Sábado)</button>
-                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-surface hover:bg-secondary/10 transition-colors" onclick="cambiarMisterioManual('Dolorosos')">Misterios Dolorosos (Martes y Viernes)</button>
-                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-surface hover:bg-secondary/10 transition-colors" onclick="cambiarMisterioManual('Gloriosos')">Misterios Gloriosos (Miércoles y Domingo)</button>
-                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-surface hover:bg-secondary/10 transition-colors" onclick="cambiarMisterioManual('Luminosos')">Misterios Luminosos (Jueves)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/60 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Gozosos')">Misterios Gozosos (Lunes y Sábado)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/60 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Dolorosos')">Misterios Dolorosos (Martes y Viernes)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/60 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Gloriosos')">Misterios Gloriosos (Miércoles y Domingo)</button>
+                <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/60 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Luminosos')">Misterios Luminosos (Jueves)</button>
             </div>
         </div>
     </div>
@@ -195,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const iconPlay = document.getElementById('audio-icon');
     const btnRewind = document.getElementById('audio-btn-rewind');
     const btnForward = document.getElementById('audio-btn-forward');
-    const imgMisterio = document.getElementById('img-misterio');
 
     let listaMisterios = [];
     let indiceActual = 0;
@@ -204,12 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let tipoMisterioActual = '';
     let hoy = '';
 
-    // Fondos por defecto para el menú y el home
-    const fondosPorDefecto = [
-        'https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&w=2071&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1515516089376-88db1e26e9c0?q=80&w=2070&auto=format&fit=crop'
-    ];
-    let fondoHomeAleatorio = fondosPorDefecto[Math.floor(Math.random() * fondosPorDefecto.length)];
+    // Fondo fijo hermoso para cuando estás en Home o Menú
+    const fondoHomeSoli = 'https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&w=2071&auto=format&fit=crop';
 
     function calcularMisterioPorDia() {
         hoy = diasSemana[new Date().getDay()];
@@ -236,8 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             refrescarEtiquetaInicio();
             cargarDatosRosario();
             
-            // Regresa al fondo base abstracto en el Home
-            capaFondo.style.backgroundImage = `url('${fondoHomeAleatorio}')`;
+            capaFondo.style.backgroundImage = `url('${fondoHomeSoli}')`;
 
             vistaInicio.classList.remove('hidden');
             btnHeader.textContent = 'MENÚ';
@@ -254,14 +239,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             actualizarBotonesNavegacion();
         } else if (nuevaVista === 'ajustes') {
-            capaFondo.style.backgroundImage = `url('${fondoHomeAleatorio}')`;
+            capaFondo.style.backgroundImage = `url('${fondoHomeSoli}')`;
             vistaAjustes.classList.remove('hidden');
             btnHeader.textContent = 'INICIO';
         }
     }
 
-    // Inicializar primer fondo
-    capaFondo.style.backgroundImage = `url('${fondoHomeAleatorio}')`;
+    capaFondo.style.backgroundImage = `url('${fondoHomeSoli}')`;
 
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
     let fechaTxt = new Date().toLocaleDateString('es-ES', opcionesFecha);
@@ -295,15 +279,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('txt-meditacion-misterio').textContent = item["Texto de Meditación"];
         document.getElementById('tag-tipo-misterio').textContent = item["Tipo de Misterio"] || 'MEDITACIÓN';
 
-        // Gestión de la Imagen tanto en el contenedor como en el FONDO GENERAL de la Pantalla
+        // Ahora la imagen se asigna ÚNICAMENTE al fondo dinámico
         if (item["Enlace de Imagen"]) {
-            imgMisterio.src = item["Enlace de Imagen"];
-            imgMisterio.style.display = "block";
-            // ¡Magia! El fondo de la app cambia dinámicamente a la ilustración actual
             capaFondo.style.backgroundImage = `url('${item["Enlace de Imagen"]}')`;
         } else {
-            imgMisterio.style.display = "none";
-            capaFondo.style.backgroundImage = `url('${fondoHomeAleatorio}')`;
+            capaFondo.style.backgroundImage = `url('${fondoHomeSoli}')`;
         }
 
         audioMotor.pause();
@@ -322,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tipoMisterioActual = tipo;
         localStorage.setItem('misterioSeleccionado', tipo);
         refrescarEtiquetaInicio();
-        indiceActual = 0; // Reiniciar contador al cambiar manualmente
+        indiceActual = 0;
         cargarDatosRosario();
         cambiarVista('oracion');
     }
