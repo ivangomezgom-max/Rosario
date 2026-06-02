@@ -174,14 +174,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let listaMisterios = [];
     let indiceActual = 0;
     const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    const hoy = diasSemana[new Date().getDay()];
     
-    let misterioAsignado = 'Gozosos';
-    if (hoy === 'Martes' || hoy === 'Viernes') misterioAsignado = 'Dolorosos';
-    else if (hoy === 'Miércoles' || hoy === 'Domingo') misterioAsignado = 'Gloriosos';
-    else if (hoy === 'Jueves') misterioAsignado = 'Luminosos';
+    let tipoMisterioActual = '';
+    let hoy = '';
 
-    let tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || misterioAsignado;
+    function calcularMisterioPorDia() {
+        hoy = diasSemana[new Date().getDay()];
+        let misterioAsignado = 'Gozosos';
+        if (hoy === 'Martes' || hoy === 'Viernes') misterioAsignado = 'Dolorosos';
+        else if (hoy === 'Miércoles' || hoy === 'Domingo') misterioAsignado = 'Gloriosos';
+        else if (hoy === 'Jueves') misterioAsignado = 'Luminosos';
+
+        // Si hay una selección manual en memoria usarla, si no, usar la del día
+        tipoMisterioActual = localStorage.getItem('misterioSeleccionado') || misterioAsignado;
+    }
+    calcularMisterioPorDia();
 
     function cambiarVista(nuevaVista) {
         modoActual = nuevaVista;
@@ -192,6 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
         contenedorPrincipal.scrollTop = 0;
 
         if (nuevaVista === 'inicio') {
+            // Limpiar memoria al volver al inicio de forma manual o al refrescar para evitar el "efecto pegado" permanente
+            localStorage.removeItem('misterioSeleccionado');
+            calcularMisterioPorDia();
+            refrescarEtiquetaInicio();
+            cargarDatosRosario();
+
             vistaInicio.classList.remove('hidden');
             btnHeader.textContent = 'MENÚ';
             btnNavAnterior.disabled = true;
@@ -235,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     actualizarReloj(); setInterval(actualizarReloj, 60000);
 
-    // BÚSQUEDA CORREGIDA: Filtra directamente quitando la 's' final para emparejar 'Gozoso', 'Doloroso', etc.
     window.cargarDatosRosario = function() {
         fetch('rosario.json')
           .then(res => res.json())
@@ -310,7 +322,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("¡Has terminado las meditaciones del día! Dios te bendiga.");
                 audioMotor.pause();
                 cambiarVista('inicio');
-                renderizarMisterio(0);
             }
         }
     });
@@ -319,9 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (audioMotor.paused) {
             audioMotor.play()
                 .then(() => { iconPlay.textContent = 'pause'; })
-                .catch(() => {
-                    audioMotor.play();
-                    iconPlay.textContent = 'pause';
+                .catch((error) => {
+                    console.error("Error de reproducción:", error);
+                    alert("El navegador bloqueó o no pudo cargar el archivo de audio. Verifica que el interruptor de silencio de tu móvil esté desactivado o que el link de Google Drive no tenga restricciones.");
+                    iconPlay.textContent = 'play_arrow';
                 });
         } else {
             audioMotor.pause();
