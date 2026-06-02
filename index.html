@@ -35,16 +35,28 @@
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24; }
         body { min-height: 100dvh; font-family: 'Open Sans', sans-serif; }
         #dynamic-bg { transition: background-image 0.8s ease-in-out; }
-        .text-shadow-sm { text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+        .text-shadow-sm { text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
         .custom-scroll-container { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+        
+        /* Solución Maestra para Efecto Translúcido (Glassmorphism) en Safari iOS */
+        .safari-glass {
+            background-color: rgba(255, 255, 255, 0.70) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+            backdrop-filter: blur(12px) saturate(180%) !important;
+        }
+        .safari-glass-dark {
+            background-color: rgba(30, 58, 95, 0.40) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            backdrop-filter: blur(8px) !important;
+        }
     </style>
 </head>
-<body class="bg-surface text-on-surface flex flex-col relative min-h-screen">
+<body class="bg-surface text-on-surface flex flex-col relative min-h-screen overflow-x-hidden">
 
 <!-- Capas de Fondo Dinámico Inmersivo -->
 <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-2] bg-cover bg-center bg-no-repeat transition-all duration-700" id="dynamic-bg"></div>
-<!-- Filtro oscuro para potenciar el contraste de los textos e interfaces flotantes -->
-<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-1] bg-primary/50 backdrop-brightness-90" id="bg-overlay"></div>
+<!-- Filtro oscuro balanceado para no opacar la imagen trasera -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-[-1] bg-primary/35 backdrop-brightness-95" id="bg-overlay"></div>
 
 <!-- TopAppBar -->
 <header class="fixed top-0 w-full z-50 bg-primary/90 backdrop-blur-md shadow-lg border-b border-secondary/20 flex justify-between items-center px-6 py-4" role="banner">
@@ -60,12 +72,12 @@
 <!-- CONTENEDOR PRINCIPAL -->
 <main class="flex-1 flex flex-col pt-20 pb-28 overflow-y-auto custom-scroll-container z-10 w-full px-4 items-center justify-start">
 
-    <!-- SECCIÓN 1: PANTALLA DE INICIO (Limpia y Minimalista) -->
+    <!-- SECCIÓN 1: PANTALLA DE INICIO -->
     <div id="pantalla-inicio" class="w-full max-w-md flex flex-col items-center justify-center space-y-10 my-auto relative py-4">
         
         <section class="w-full text-center z-10">
             <div class="flex flex-col items-center space-y-2">
-                <div class="inline-block px-6 py-1.5 bg-primary/40 backdrop-blur-md rounded-full border border-white/10 mb-2">
+                <div class="inline-block px-6 py-1.5 safari-glass-dark rounded-full border border-white/10 mb-2">
                     <span class="font-body text-[10px] uppercase tracking-[0.25rem] text-secondary font-bold">Presencia Sagrada</span>
                 </div>
                 <h2 id="reloj-digital" class="font-display text-6xl font-medium text-white text-shadow-sm tracking-tight">--:--</h2>
@@ -73,12 +85,10 @@
             </div>
         </section>
 
-        <!-- Se removió el cuadro de imagen central del Home para dejar el fondo limpio -->
-
         <section class="w-full z-10 space-y-6">
             <div class="relative group">
-                <div class="absolute -inset-2 bg-secondary/20 rounded-xl blur-xl transition-all duration-500"></div>
-                <button id="btn-comenzar-rosario" class="relative w-full bg-white/90 backdrop-blur-md rounded-xl shadow-2xl flex flex-col items-center justify-center p-6 border border-secondary/60 overflow-hidden active:scale-95 transition-transform">
+                <div class="absolute -inset-2 bg-secondary/10 rounded-xl blur-xl transition-all duration-500"></div>
+                <button id="btn-comenzar-rosario" class="relative w-full safari-glass rounded-xl shadow-2xl flex flex-col items-center justify-center p-6 border border-white/40 overflow-hidden active:scale-95 transition-transform">
                     <span class="font-body text-primary text-[10px] tracking-[0.3em] mb-2 uppercase font-extrabold">COMENZAR LA ORACIÓN</span>
                     <span class="font-display text-xl text-primary text-center leading-tight">
                         Rezar los Misterios de Hoy
@@ -96,11 +106,11 @@
         </section>
     </div>
 
-    <!-- SECCIÓN 2: PANTALLA DE ORACIÓN (Efecto Vitral Translúcido Avanzado) -->
+    <!-- SECCIÓN 2: PANTALLA DE ORACIÓN -->
     <div id="pantalla-oracion" class="hidden w-full max-w-xl flex flex-col space-y-4 py-2 my-auto">
         
-        <!-- Tarjeta Flotante Translúcida -->
-        <div class="bg-white/75 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/40 flex flex-col space-y-5 transition-all duration-300">
+        <!-- Tarjeta Flotante Translúcida Corregida para iOS -->
+        <div class="safari-glass rounded-2xl p-6 shadow-2xl border border-white/50 flex flex-col space-y-5 transition-all duration-300">
             
             <div class="flex justify-between items-center border-b border-primary/10 pb-3">
                 <span id="txt-contador-pasos" class="text-primary font-body text-xs font-bold tracking-wider uppercase">MISTERIO 1 DE 5</span>
@@ -109,11 +119,9 @@
             
             <h3 id="txt-titulo-misterio" class="font-display text-2xl text-primary font-bold text-center leading-tight">Cargando Misterio...</h3>
             
-            <!-- Se eliminó por completo el recuadro de imagen central interno -->
-
-            <!-- Texto de la meditación con scroll seguro e independiente -->
+            <!-- Texto de la meditación -->
             <div class="max-h-60 overflow-y-auto pr-1 custom-scroll-container">
-                <p id="txt-meditacion-misterio" class="font-body text-on-surface text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
+                <p id="txt-meditacion-misterio" class="font-body text-on-surface text-base md:text-lg leading-relaxed text-justify whitespace-pre-line font-medium">
                     Cargando la meditación correspondiente...
                 </p>
             </div>
@@ -138,7 +146,7 @@
 
     <!-- SECCIÓN 3: PANTALLA DE SELECCIÓN MANUAL -->
     <div id="pantalla-ajustes" class="hidden w-full max-w-md flex flex-col py-4 my-auto">
-        <div class="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/40 text-center">
+        <div class="safari-glass rounded-2xl p-6 shadow-2xl border border-white/40 text-center">
             <h3 class="font-display text-2xl text-primary font-bold mb-6 uppercase tracking-wider">Seleccionar Misterios</h3>
             <div class="flex flex-col space-y-3.5" id="lista-seleccion-misterios">
                 <button class="w-full py-3 rounded-xl border border-secondary/40 text-primary font-body font-semibold bg-white/60 hover:bg-secondary/20 transition-colors" onclick="cambiarMisterioManual('Gozosos')">Misterios Gozosos (Lunes y Sábado)</button>
@@ -194,8 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let tipoMisterioActual = '';
     let hoy = '';
 
-    // Fondo fijo hermoso para cuando estás en Home o Menú
-    const fondoHomeSoli = 'https://images.unsplash.com/photo-1548625361-998801f99c83?q=80&w=2071&auto=format&fit=crop';
+    // URL base de la hermosa imagen representativa fijada para el Home
+    const fondoHomeSoli = 'https://images.unsplash.com/photo-1544427928-c49cddeb8d92?q=80&w=1974&auto=format&fit=crop';
 
     function calcularMisterioPorDia() {
         hoy = diasSemana[new Date().getDay()];
@@ -245,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Inicialización del fondo del Home
     capaFondo.style.backgroundImage = `url('${fondoHomeSoli}')`;
 
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
@@ -279,7 +288,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('txt-meditacion-misterio').textContent = item["Texto de Meditación"];
         document.getElementById('tag-tipo-misterio').textContent = item["Tipo de Misterio"] || 'MEDITACIÓN';
 
-        // Ahora la imagen se asigna ÚNICAMENTE al fondo dinámico
         if (item["Enlace de Imagen"]) {
             capaFondo.style.backgroundImage = `url('${item["Enlace de Imagen"]}')`;
         } else {
@@ -300,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.cambiarMisterioManual = function(tipo) {
         tipoMisterioActual = tipo;
-        localStorage.setItem('misterioSeleccionado', tipo);
+        localStorage.setItem('misterioSelected', tipo);
         refrescarEtiquetaInicio();
         indiceActual = 0;
         cargarDatosRosario();
